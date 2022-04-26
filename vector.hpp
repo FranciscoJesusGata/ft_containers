@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/04/22 13:27:11 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/04/26 13:15:14 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ namespace ft {
 			//Contructors
 			vector (const allocator_type& alloc = allocator_type()): _allocator(alloc), _storage(NULL), _size(0), _capacity(0) {}
 
-			vector (size_type n, const value_type& val = value_type(),
-				const allocator_type& alloc = allocator_type()): _allocator(alloc), _storage(_allocator.allocate(n)), _size(n), _capacity(n) {
+			vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
+				_allocator(alloc), _storage(_allocator.allocate(n)), _size(n), _capacity(n) {
 				pointer	it;
 
 				while (it) {
@@ -51,7 +51,7 @@ namespace ft {
 				this->_storage = this->_allocator.allocate(n);
 				this->_size = n;
 				this->_capacity = n;
-				pos = this->storage;
+				pos = this->_storage;
 				while (first != last) {
 					*pos = *first;
 					first++; pos++;
@@ -67,8 +67,8 @@ namespace ft {
 				pointer nxt;
 
 				while (this->_storage) {
-					nxt = this->storage + 1;
-					this->allocator.destroy(this->storage);
+					nxt = this->_storage + 1;
+					this->_allocator.destroy(this->_storage);
 					this->_storage = nxt;
 				}
 			}
@@ -108,9 +108,9 @@ namespace ft {
 				return (this->_allocator.max_size());
 			}
 
-			void			resize(size_type n, value_type val = value_type()) {
+			/*void			resize(size_type n, value_type val = value_type()) {
 				
-			}
+			}*/
 			size_type		capacity() const;
 			bool			empty() const;
 			void			reverse(size_type n);
