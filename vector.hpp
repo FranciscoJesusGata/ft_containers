@@ -6,13 +6,16 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/04/26 13:15:14 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/04/27 16:06:20 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 # include <memory>
+# include <type_traits.hpp>
+
+# include <iostream>
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -32,15 +35,15 @@ namespace ft {
 
 			vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
 				_allocator(alloc), _storage(_allocator.allocate(n)), _size(n), _capacity(n) {
-				pointer	it;
+				size_type	counter = 0;
 
-				while (it) {
-					*it = val;
-					it++;
+				while (counter < n) {
+					this->_storage[counter] = val;
+					counter++;
 				}
 			}
 
-			template <class InputIterator>
+			template <class InputIterator, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type>
 			vector (InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type()): _allocator(alloc) {
 				size_type		n;
@@ -58,19 +61,19 @@ namespace ft {
 				}
 			}
 
-			vector (const vector &x) {
+			vector (const vector &x): _allocator(allocator_type()) {
 				if (*this != x)
 					*this = x;
 			}
 
 			~vector(void) {
-				pointer nxt;
+				size_type counter = 0;
 
-				while (this->_storage) {
-					nxt = this->_storage + 1;
-					this->_allocator.destroy(this->_storage);
-					this->_storage = nxt;
+				while (counter < this->_size) {
+					this->_allocator.destroy(this->_storage + counter);
+					counter++;
 				}
+				this->_allocator.deallocate(this->_storage, this->_capacity);
 			}
 
 			vector&			operator= (const vector& x) {
