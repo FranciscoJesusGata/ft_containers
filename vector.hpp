@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/04/27 17:30:02 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:39:13 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ namespace ft {
 			}
 
 			vector (const vector &x): _allocator(allocator_type()) {
-				if (*this != x)
+				//if (*this != x)
 					*this = x;
 			}
 
@@ -109,13 +109,43 @@ namespace ft {
 				return (this->_allocator.max_size());
 			}
 
-			/*void			resize(size_type n, value_type val = value_type()) {
-				
-			}*/
-			size_type		capacity() const;
-			bool			empty() const;
-			void			reverse(size_type n);
+			void			resize(size_type n, value_type val = value_type()) {
+				if (n < this->_capacity) {
+					if (n < this->_size) {
+						for (size_type m = n; m < this->_size ; m++)
+							this->_allocator.destroy(this->_storage + m);
+					}
+					else if (n < this->_capacity && n > this->_size) {
+						for (size_type m = this->_size ; m < n ; m++)
+							this->_storage[m] = val;
+					}
+				}
+				else if (n > this->_capacity) {
+					pointer new_storadge = this->_allocator.allocate(n);
+					for (size_type m = 0; m < n; m++) {
+						if (m < this->_size)
+							new_storadge[m] = this->_storage[m];
+						else
+							new_storadge[m] = val;
+					}
+					this->_allocator.deallocate(this->_storage, this->_capacity);
+					this->_storage = new_storadge;
+					this->_capacity = n;
+				}
+				this->_size = n;
+			}
 
+			size_type		capacity() const {
+				return (this->_capacity);
+			}
+
+			bool			empty() const {
+				if (!this->_size)
+					return (true);
+				return (false);
+			}
+
+			void			reverse(size_type n);
 			reference		operator[] (size_type n);
 			const_reference	operator[] (size_type n) const;
 			reference		at (size_type n);
@@ -147,26 +177,26 @@ namespace ft {
 			size_type		_capacity;
 	};
 
-template <class T, class Alloc>
-bool	operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-bool	operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-bool	operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-bool	operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-bool	operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-bool	operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool	operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-void	swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
+	template <class T, class Alloc>
+	void	swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
 
 }
 
