@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/04/29 16:39:13 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:32:29 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 # define VECTOR_HPP
 # include <memory>
 # include <type_traits.hpp>
-
-# include <iostream>
+# include <stdexcept>
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -145,15 +144,50 @@ namespace ft {
 				return (false);
 			}
 
-			void			reverse(size_type n);
-			reference		operator[] (size_type n);
-			const_reference	operator[] (size_type n) const;
-			reference		at (size_type n);
-			const_reference	at (size_type n) const;
-			reference		front();
-			const_reference	front() const;
-			reference		back();
-			const_reference	back() const;
+			void			reserve(size_type n) {
+				if (n > this->_capacity) {
+					pointer new_storadge = this->_allocator.allocate(n);
+					for (size_type m = 0; m < this->_size; m++) {
+						new_storadge[m] = this->_storage[m];
+					}
+					this->_allocator.deallocate(this->_storage, this->_capacity);
+					this->_storage = new_storadge;
+					this->_capacity = n;
+				}
+			}
+
+			reference		operator[] (size_type n) {
+				return (this->_storage[n]);
+			}
+
+			const_reference	operator[] (size_type n) const {
+				return (this->_storage[n]);
+			}
+
+			reference		at (size_type n) {
+				if (n >= this->_size)
+					throw std::out_of_range("vector");
+				return ((*this)[n]);
+			}
+
+			const_reference	at (size_type n) const {
+				return ((*this)[n]);
+			}
+
+			reference		front() {
+				return (*(this->_storage));
+			}
+
+			const_reference	front() const {
+				return (*(this->_storage));
+			}
+
+			reference		back() {
+				return (*(this->_storage + this->_size - 1));
+			}
+			const_reference	back() const {
+				return (*(this->_storage + this->_size - 1));
+			}
 
 			template <class InputIterator>
 			void			assign (InputIterator first, InputIterator last);
