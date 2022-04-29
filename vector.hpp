@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/04/27 16:06:20 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/04/27 17:30:02 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,18 +77,16 @@ namespace ft {
 			}
 
 			vector&			operator= (const vector& x) {
-				pointer			pos;
-				size_type		n;
+				size_type		n = 0;
 
 				this->_size = x._size;
 				this->_capacity = x._capacity;
 				this->_storage = _allocator.allocate(x._capacity);
-				pos = this->_storage;
-				n = 0;
 				while (n < this->_size) {
-					pos = *(x._storage + n);
-					n++; pos++;
+					this->_storage[n] = x._storage[n];
+					n++;
 				}
+				return (*this);
 			}
 
 			/*
