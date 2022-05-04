@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/02 21:54:06 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/04 22:41:10 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,48 +17,126 @@
 	#include <vector.hpp>
 #endif
 #include <iostream>
+#include <string>
+
+template <class T>
+void vector_cmp(ft::vector<T>& v1, ft::vector<T>& v2, std::string errmsg, std::string successmsg) {
+	if (v1.size() != v2.size() || v1.capacity() != v2.capacity()) {
+		std::cout << errmsg << " ";
+		return ;
+	}
+	for (size_t i = 0; i < v1.size(); i++) {
+		if (v1[i] != v2[i]) {
+			std::cout << errmsg << " ";
+			return ;
+		}
+	}
+	std::cout << successmsg << " ";
+}
+
+template <class T>
+void vector_cmp(ft::vector<T> const &v1, ft::vector<T> const &v2, std::string errmsg, std::string successmsg) {
+	if (v1.size() != v2.size() || v1.capacity() != v2.capacity()) {
+		std::cout << errmsg << " ";
+		return ;
+	}
+	for (size_t i = 0; i < v1.size(); i++) {
+		if (v1[i] != v2[i]) {
+			std::cout << errmsg << " ";
+			return ;
+		}
+	}
+	std::cout << successmsg << " ";
+}
+
+template <class T>
+void vector_cmp(ft::vector<T> const &v1, T *v2, size_t len, std::string errmsg, std::string successmsg) {
+	if (len != v1.size()) {
+		std::cout << errmsg << " ";
+		return ;
+	}
+	for (size_t i = 0; i < v1.size(); i++) {
+		if (v1[i] != v2[i]) {
+			std::cout << errmsg << " ";
+			return ;
+		}
+	}
+	std::cout << successmsg << " ";
+}
+
+template <class T>
+void	resize_test(ft::vector<T> &v, size_t size, size_t capacity) {
+	try {
+		v.resize(size);
+		if (v.size() != size || v.capacity() != capacity)
+			std::cout << "KO Yours: [" << v.size() << "," << v.capacity() << "] Expected: [" << size << "," << capacity << "] ";
+		else
+			std::cout << "OK! ";
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+}
+
+template <class T>
+void	resize_test(ft::vector<T> &v, size_t size, size_t capacity, T val) {
+	try {
+		size_t original_size = v.size();
+		v.resize(size, val);
+		if (v.size() != size || v.capacity() != capacity)
+			std::cout << "KO Yours: [" << v.size() << "," << v.capacity() << "] Expected: [" << size << "," << capacity << "] ";
+		else {
+			for (size_t n = original_size; n < size ; n++) {
+				if (v[n] != val) {
+					std::cout << "KO: Value doesn't match: v[" << n << "] = " << v[n] << std::endl;
+					return ;
+				}
+			}
+			std::cout << "OK! ";
+		}
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+}
+
+template <class T>
+void	reserve_test(ft::vector<T> &v, size_t capacity) {
+	try {
+		size_t old_size = v.size();
+		v.reserve(capacity);
+		if ((v.capacity() < capacity && v.capacity() != capacity) || v.size() != old_size)
+			std::cout << "KO Yours: [" << v.size() << "," << v.capacity() << "] Expected: [" << old_size << "," << capacity << "] ";
+		else
+			std::cout << "OK! ";
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+}
 
 int main(void) {
 	ft::vector<int> empty;
 	ft::vector<int> stuff(5, 100);
 	ft::vector<int> const cpy(stuff);
+	int arr[] = {1, 2, 3, 4, 5};
+	ft::vector<int> other_cpy(arr, arr + sizeof(arr) / sizeof(int));
 
-	std::cout << (empty.empty() ? "OK!" : "KO") << std::endl;
+	std::cout << "Constructors tests:" << std::endl;
+	vector_cmp<int>(stuff, cpy, "Copy constructor failed", "OK!");
+	vector_cmp<int>(other_cpy, arr, sizeof(arr)/sizeof(int), "Iterator constructor failed", "OK!");
+	std::cout << (empty.empty() ? "OK! " : "Empty constructor failed ");
 	empty = stuff;
-	std::cout << empty.size() << std::endl;
-	std::cout << empty.capacity() << std::endl;
-	empty.resize(2);
-	std::cout << empty.size() << std::endl;
-	std::cout << empty.capacity() << std::endl;
-	empty.resize(10, 42);
-	std::cout << empty.size() << std::endl;
-	std::cout << empty.capacity() << std::endl;
-	std::cout << empty[9] << std::endl;
-	empty.resize(0);
-	std::cout << empty.size() << std::endl;
-	std::cout << empty.capacity() << std::endl;
-	try {
-		empty.resize(-10);
-		std::cout << empty.size() << std::endl;
-		std::cout << empty.capacity() << std::endl;
-	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
-	}
-	std::cout << stuff[4] << std::endl;
-	std::cout << empty[4] << std::endl;
-	try {
-		std::cout << empty.at(4) << std::endl;
-	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
-	}
-	empty.reserve(0);
-	empty.reserve(10);
-	std::cout << "Size: " << empty.size() << std::endl << "Capacity: " << empty.capacity () << std::endl;
-	try {
-		stuff.reserve(stuff.max_size() + 1);
-	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
-	}
+	vector_cmp<int>(other_cpy, arr, sizeof(arr)/sizeof(int), "Assignment operator failed", "OK!");
+	std::cout << std::endl << "Capacity functions tests:" << std::endl;
+	std::cout << "Max size: " << empty.max_size() << std::endl;
+	resize_test(empty, 2, empty.capacity());
+	resize_test(empty, 10, 10, 42);
+	resize_test(empty, 10, empty.capacity(), 0);
+	resize_test(empty, 0, empty.capacity());
+	resize_test(empty, -10, empty.capacity());
+	resize_test(empty, empty.max_size(), empty.max_size());
+	reserve_test(empty, 0);
+	reserve_test(empty, 10);
+	reserve_test(empty, 20);
+	reserve_test(empty, empty.max_size());
 	std::cout << (stuff[0] == stuff.front() ? "Front works well" : "KO") << std::endl;
 	std::cout << (stuff[stuff.size() - 1] == stuff.back() ? "Back works well" : "KO") << std::endl;
 }
