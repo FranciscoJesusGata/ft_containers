@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/02 23:05:56 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/04 20:53:27 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_HPP
 # include <memory>
 # include <type_traits.hpp>
+# include <algorithm.hpp>
 # include <stdexcept>
 
 namespace ft {
@@ -30,30 +31,30 @@ namespace ft {
 			typedef size_t										size_type;
 
 			//Contructors
-			vector (const allocator_type& alloc = allocator_type()): _allocator(alloc), _storage(NULL), _size(0), _capacity(0) {}
+			vector (const allocator_type& alloc = allocator_type()): _allocator(alloc), _storadge(NULL), _size(0), _capacity(0) {}
 
 			vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
-				_allocator(alloc), _storage(_allocator.allocate(n)), _size(n), _capacity(n) {
+				_allocator(alloc), _storadge(_allocator.allocate(n)), _size(n), _capacity(n) {
 				size_type	counter = 0;
 
 				while (counter < n) {
-					this->_storage[counter] = val;
+					this->_storadge[counter] = val;
 					counter++;
 				}
 			}
 
-			template <class InputIterator, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type>
-			vector (InputIterator first, InputIterator last,
-				const allocator_type& alloc = allocator_type()): _allocator(alloc) {
-				size_type		n;
+			template <class InputIterator>
+			vector (typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last,
+				const allocator_type& alloc = allocator_type()):_allocator(alloc) {
+				size_type		n = 0;
 				pointer			pos;
 
 				for (InputIterator it = first;it != last;it++)
 					n++;
-				this->_storage = this->_allocator.allocate(n);
+				this->_storadge = this->_allocator.allocate(n);
 				this->_size = n;
 				this->_capacity = n;
-				pos = this->_storage;
+				pos = this->_storadge;
 				while (first != last) {
 					*pos = *first;
 					first++; pos++;
@@ -69,10 +70,10 @@ namespace ft {
 				size_type counter = 0;
 
 				while (counter < this->_size) {
-					this->_allocator.destroy(this->_storage + counter);
+					this->_allocator.destroy(this->_storadge + counter);
 					counter++;
 				}
-				this->_allocator.deallocate(this->_storage, this->_capacity);
+				this->_allocator.deallocate(this->_storadge, this->_capacity);
 			}
 
 			vector&			operator= (const vector& x) {
@@ -80,9 +81,9 @@ namespace ft {
 
 				this->_size = x._size;
 				this->_capacity = x._capacity;
-				this->_storage = _allocator.allocate(x._capacity);
+				this->_storadge = _allocator.allocate(x._capacity);
 				while (n < this->_size) {
-					this->_storage[n] = x._storage[n];
+					this->_storadge[n] = x._storadge[n];
 					n++;
 				}
 				return (*this);
@@ -114,23 +115,23 @@ namespace ft {
 				if (n < this->_capacity) {
 					if (n < this->_size) {
 						for (size_type m = n; m < this->_size ; m++)
-							this->_allocator.destroy(this->_storage + m);
+							this->_allocator.destroy(this->_storadge + m);
 					}
 					else if (n < this->_capacity && n > this->_size) {
 						for (size_type m = this->_size ; m < n ; m++)
-							this->_storage[m] = val;
+							this->_storadge[m] = val;
 					}
 				}
 				else if (n > this->_capacity) {
 					pointer new_storadge = this->_allocator.allocate(n);
 					for (size_type m = 0; m < n; m++) {
 						if (m < this->_size)
-							new_storadge[m] = this->_storage[m];
+							new_storadge[m] = this->_storadge[m];
 						else
 							new_storadge[m] = val;
 					}
-					this->_allocator.deallocate(this->_storage, this->_capacity);
-					this->_storage = new_storadge;
+					this->_allocator.deallocate(this->_storadge, this->_capacity);
+					this->_storadge = new_storadge;
 					this->_capacity = n;
 				}
 				this->_size = n;
@@ -150,20 +151,20 @@ namespace ft {
 				if (n > this->_capacity) {
 					pointer new_storadge = this->_allocator.allocate(n);
 					for (size_type m = 0; m < this->_size; m++) {
-						new_storadge[m] = this->_storage[m];
+						new_storadge[m] = this->_storadge[m];
 					}
-					this->_allocator.deallocate(this->_storage, this->_capacity);
-					this->_storage = new_storadge;
+					this->_allocator.deallocate(this->_storadge, this->_capacity);
+					this->_storadge = new_storadge;
 					this->_capacity = n;
 				}
 			}
 
 			reference		operator[] (size_type n) {
-				return (this->_storage[n]);
+				return (this->_storadge[n]);
 			}
 
 			const_reference	operator[] (size_type n) const {
-				return (this->_storage[n]);
+				return (this->_storadge[n]);
 			}
 
 			reference		at (size_type n) {
@@ -177,19 +178,19 @@ namespace ft {
 			}
 
 			reference		front() {
-				return (*(this->_storage));
+				return (*(this->_storadge));
 			}
 
 			const_reference	front() const {
-				return (*(this->_storage));
+				return (*(this->_storadge));
 			}
 
 			reference		back() {
-				return (*(this->_storage + this->_size - 1));
+				return (*(this->_storadge + this->_size - 1));
 			}
 
 			const_reference	back() const {
-				return (*(this->_storage + this->_size - 1));
+				return (*(this->_storadge + this->_size - 1));
 			}
 
 			template <class InputIterator>
@@ -203,7 +204,7 @@ namespace ft {
 				if (size > this->_capacity) {
 					pointer new_storadge = this->allocator.allocate(size);
 					this->_allocator.deallocate(this->_storadge, this->_capacity);
-					this->_storage = new_storadge;
+					this->_storadge = new_storadge;
 					this->_capacity = size;
 				}
 				for (InputIterator iter = first ; iter != last ; iter++) {
@@ -216,7 +217,7 @@ namespace ft {
 			void			assign (size_type n, const value_type& val) {
 				if (n > this->_capacity) {
 					pointer new_storadge = this->_allocator.allocate(n);
-					this->_allocator.deallocate(this->_storage, this->_capacity);
+					this->_allocator.deallocate(this->_storadge, this->_capacity);
 					this->_storadge = new_storadge;
 					this->_capacity = n;
 				}
@@ -232,7 +233,7 @@ namespace ft {
 					else
 						resize(this->_capacity + this->_capacity / 2);
 				}
-				this->_storage[this->_size++] = val;
+				this->_storadge[this->_size++] = val;
 			}
 
 			void			pop_back() {
@@ -254,7 +255,7 @@ namespace ft {
 			allocator_type	get_allocator() const;
 		private:
 			allocator_type	_allocator;
-			pointer			_storage;
+			pointer			_storadge;
 			size_type		_size;
 			size_type		_capacity;
 	};
