@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/04 20:53:27 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:25:00 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,8 @@ namespace ft {
 			}
 
 			const_reference	at (size_type n) const {
+				if (n >= this->_size)
+					throw std::out_of_range("vector");
 				return ((*this)[n]);
 			}
 
