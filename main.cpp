@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/04 22:41:10 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:37:41 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	resize_test(ft::vector<T> &v, size_t size, size_t capacity) {
 		else
 			std::cout << "OK! ";
 	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
+		std::cout << e.what() << " ";
 	}
 }
 
@@ -94,7 +94,7 @@ void	resize_test(ft::vector<T> &v, size_t size, size_t capacity, T val) {
 			std::cout << "OK! ";
 		}
 	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
+		std::cout << e.what() << " ";
 	}
 }
 
@@ -108,7 +108,33 @@ void	reserve_test(ft::vector<T> &v, size_t capacity) {
 		else
 			std::cout << "OK! ";
 	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
+		std::cout << e.what() << " ";
+	}
+}
+
+template <class T>
+void	at_test(ft::vector<T> &v, size_t position) {
+	try {
+		T const &element = v.at(position);
+		if (element == v[position])
+			std::cout << "OK! ";
+		else
+			std::cout << "KO: At returns element in a wrong position";
+	} catch (std::exception &e) {
+		std::cout << e.what() << " ";
+	}
+}
+
+template <class T>
+void	at_test(ft::vector<T> const &v, size_t position) {
+	try {
+		T const &element = v.at(position);
+		if (element == v[position])
+			std::cout << "OK! ";
+		else
+			std::cout << "KO: At returns element in a wrong position";
+	} catch (std::exception &e) {
+		std::cout << e.what() << " ";
 	}
 }
 
@@ -125,18 +151,32 @@ int main(void) {
 	std::cout << (empty.empty() ? "OK! " : "Empty constructor failed ");
 	empty = stuff;
 	vector_cmp<int>(other_cpy, arr, sizeof(arr)/sizeof(int), "Assignment operator failed", "OK!");
-	std::cout << std::endl << "Capacity functions tests:" << std::endl;
+	std::cout << std::endl << std::endl << "Capacity functions tests:" << std::endl;
 	std::cout << "Max size: " << empty.max_size() << std::endl;
+	std::cout << "Resize:" << std::endl;
 	resize_test(empty, 2, empty.capacity());
 	resize_test(empty, 10, 10, 42);
 	resize_test(empty, 10, empty.capacity(), 0);
 	resize_test(empty, 0, empty.capacity());
 	resize_test(empty, -10, empty.capacity());
 	resize_test(empty, empty.max_size(), empty.max_size());
+	std::cout << std::endl << "Reserve:" << std::endl;
 	reserve_test(empty, 0);
 	reserve_test(empty, 10);
 	reserve_test(empty, 20);
 	reserve_test(empty, empty.max_size());
-	std::cout << (stuff[0] == stuff.front() ? "Front works well" : "KO") << std::endl;
-	std::cout << (stuff[stuff.size() - 1] == stuff.back() ? "Back works well" : "KO") << std::endl;
+	reserve_test(empty, -1);
+	std::cout << std::endl << std::endl << "Element access functions tests:" << std::endl;
+	std::cout << "At:" << std::endl;
+	at_test(empty, 0);
+	at_test(empty, 1);
+	at_test(cpy, 0);
+	at_test(cpy, cpy.size() - 1);
+	at_test(cpy, cpy.size());
+	at_test(cpy, -1);
+	std::cout << "Back and Front:" << std::endl;
+	std::cout << (stuff[0] == stuff.front() ? "OK! " : "KO Front function doesn't return first element ");
+	std::cout << (stuff[stuff.size() - 1] == stuff.back() ? "OK! " : "KO Back function doesn't return last element");
+
+	std::cout << std::endl;
 }
