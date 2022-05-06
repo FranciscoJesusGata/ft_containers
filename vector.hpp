@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/05 16:25:00 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/06 18:50:21 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <type_traits.hpp>
 # include <algorithm.hpp>
 # include <stdexcept>
+# include <Iterator.hpp>
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -27,7 +28,9 @@ namespace ft {
 			typedef typename allocator_type::const_reference	const_reference ;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer ;
-			//Iterator, const iterator and reverse iterator left
+			typedef typename ft::vector_iterator<T>				iterator;
+			typedef typename ft::vector_iterator<T> const		const_iterator;
+			//Reverse iterator left
 			typedef size_t										size_type;
 
 			//Contructors
@@ -89,12 +92,23 @@ namespace ft {
 				return (*this);
 			}
 
-			/*
-			iterator		begin();
-			const_iterator	begin() const;
-			iterator		end();
-			const_iterator	end() const;
-			reverse_iterator		rbegin();
+			iterator		begin() {
+				return (iterator(this->_storadge));
+			}
+
+			const_iterator	begin() const {
+				return (iterator(this->_storadge));
+			}
+
+			iterator		end() {
+				return (iterator(this->_storadge + this->_size));
+			}
+
+			const_iterator	end() const {
+				return (iterator(this->_storadge + this->_size));
+			}
+
+			/*reverse_iterator		rbegin();
 			const_reverse_iterator	rbegin() const;
 			reverse_iterator		rend();
 			const_reverse_iterator	rend() const;
@@ -239,10 +253,8 @@ namespace ft {
 			}
 
 			void			pop_back() {
-				if (this->_size) {
-					this->_allocator.destroy(back());
-					this->_size--;
-				}
+				this->_allocator.destroy(back());
+				this->_size--;
 			}
 
 			//iterator		insert (iterator position, const value_type& val);
@@ -254,7 +266,10 @@ namespace ft {
 			void			swap (vector& x);
 			void			clear();
 
-			allocator_type	get_allocator() const;
+			allocator_type	get_allocator() const {
+				return (this->allocator);
+			}
+
 		private:
 			allocator_type	_allocator;
 			pointer			_storadge;
