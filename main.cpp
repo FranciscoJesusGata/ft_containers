@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/05 16:37:41 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/09 16:29:00 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,32 +21,18 @@
 
 template <class T>
 void vector_cmp(ft::vector<T>& v1, ft::vector<T>& v2, std::string errmsg, std::string successmsg) {
-	if (v1.size() != v2.size() || v1.capacity() != v2.capacity()) {
+	if (v1.size() != v2.size() || v1.capacity() != v2.capacity() || v1 != v2 )
 		std::cout << errmsg << " ";
-		return ;
-	}
-	for (size_t i = 0; i < v1.size(); i++) {
-		if (v1[i] != v2[i]) {
-			std::cout << errmsg << " ";
-			return ;
-		}
-	}
-	std::cout << successmsg << " ";
+	else
+		std::cout << successmsg << " ";
 }
 
 template <class T>
 void vector_cmp(ft::vector<T> const &v1, ft::vector<T> const &v2, std::string errmsg, std::string successmsg) {
-	if (v1.size() != v2.size() || v1.capacity() != v2.capacity()) {
+	if (v1.size() != v2.size() || v1.capacity() != v2.capacity() || v1 != v2 )
 		std::cout << errmsg << " ";
-		return ;
-	}
-	for (size_t i = 0; i < v1.size(); i++) {
-		if (v1[i] != v2[i]) {
-			std::cout << errmsg << " ";
-			return ;
-		}
-	}
-	std::cout << successmsg << " ";
+	else
+		std::cout << successmsg << " ";
 }
 
 template <class T>
@@ -138,6 +124,20 @@ void	at_test(ft::vector<T> const &v, size_t position) {
 	}
 }
 
+template <class T>
+void	print_vector(ft::vector<T> &v) {
+	typename ft::vector<T>::iterator it = v.begin();
+	typename ft::vector<T>::iterator end = v.end();
+
+	std::cout << "[ ";
+	while (it != end) {
+		std::cout << *it++;
+		if (it < end)
+			std::cout << ", ";
+	}
+	std::cout << " ]" << std::endl;
+}
+
 int main(void) {
 	ft::vector<int> empty;
 	ft::vector<int> stuff(5, 100);
@@ -174,9 +174,13 @@ int main(void) {
 	at_test(cpy, cpy.size() - 1);
 	at_test(cpy, cpy.size());
 	at_test(cpy, -1);
-	std::cout << "Back and Front:" << std::endl;
+	std::cout << std::endl << "Back and Front:" << std::endl;
 	std::cout << (stuff[0] == stuff.front() ? "OK! " : "KO Front function doesn't return first element ");
 	std::cout << (stuff[stuff.size() - 1] == stuff.back() ? "OK! " : "KO Back function doesn't return last element");
-
+	print_vector(stuff);
+	std::cout << std::boolalpha;
+	std::cout << (stuff == cpy) << std::endl;
+	std::cout << (stuff <= cpy) << std::endl;
+	std::cout << std::noboolalpha;
 	std::cout << std::endl;
 }
