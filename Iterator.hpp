@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/09 20:03:57 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/12 20:41:11 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,20 @@ template <class T>
 			T*	_pointer;
 		public:
 			typedef typename iterator_traits<T*>::difference_type	difference_type;
+
 			vector_iterator(): _pointer(NULL) {}
-			vector_iterator(T* src): _pointer(src) {}
-			vector_iterator(vector_iterator const &src) { *this = src; }
+			vector_iterator(T *src): _pointer(src) {}
+			vector_iterator(vector_iterator const &src): _pointer(src._pointer) {}
 			~vector_iterator() {}
 
 			vector_iterator	&operator=(vector_iterator const & rhs) {
-				if (rhs != *this)
+				if (rhs._pointer != this->_pointer)
 					this->_pointer = rhs._pointer;
 				return (*this);
 			}
 
 			vector_iterator	&operator=(T const *rhs) {
-				if (rhs != this->pointer)
+				if (rhs != this->_pointer)
 					this->_pointer = rhs;
 				return (*this);
 			}
@@ -63,7 +64,7 @@ template <class T>
 			bool			operator!=(vector_iterator const& rhs) const {
 				return (!(*this == rhs));
 			}
-			
+
 			T				&operator*() {
 				return (*this->_pointer);
 			}
@@ -79,7 +80,7 @@ template <class T>
 
 			vector_iterator	operator++(int) {
 				vector_iterator	temp(*this);
-				++this->_pointer;
+				++(*this);
 				return (temp);
 			}
 
@@ -89,7 +90,7 @@ template <class T>
 			}
 
 			vector_iterator	operator--(int) {
-				vector_iterator	temp(this);
+				vector_iterator	temp(*this);
 				--this->_pointer;
 				return (temp);
 			}
@@ -127,6 +128,6 @@ template <class T>
 			}
 	};
 
-};
+}
 
 #endif
