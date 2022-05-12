@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/09 20:22:08 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/12 20:37:45 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,13 +211,16 @@ namespace ft {
 			}
 
 			template <class InputIterator>
-			void			assign (InputIterator first, InputIterator last) {
+			void			assign
+				(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
 				size_t size = 0;
 				size_t index = 0;
 				InputIterator it = first;
 
-				while (it != last)
-					size++; it++;
+				while (it != last) {
+					size++; 
+					it++;
+				}
 				if (size > this->_capacity) {
 					pointer new_storadge = this->_allocator.allocate(size);
 					this->_allocator.deallocate(this->_storadge, this->_capacity);
@@ -247,16 +250,16 @@ namespace ft {
 			void			push_back (const value_type& val) {
 				if (this->_size == this->_capacity) {
 					if (this->_capacity <= 1)
-						resize(this->_capacity + 1);
+						reserve(this->_capacity + 1);
 					else
-						resize(this->_capacity + this->_capacity / 2);
+						reserve(this->_capacity + this->_capacity / 2);
 				}
 				this->_storadge[this->_size++] = val;
 			}
 
 			void			pop_back() {
-				this->_allocator.destroy(back());
-				this->_size--;
+				_allocator.destroy(&back());
+				_size--;
 			}
 
 			//iterator		insert (iterator position, const value_type& val);
@@ -265,7 +268,19 @@ namespace ft {
 			void			insert (iterator position, InputIterator first, InputIterator last);*/
 			//iterator		erase (iterator position);
 			//iterator		erase (iterator first, iterator last);
-			void			swap (vector& x);
+
+			void			swap (vector& x) {
+				pointer		tmp = x._storadge;
+				size_type	tmp_size = x._size;
+				size_type	tmp_capacity = x._capacity;
+
+				x._storadge = _storadge;
+				x._size = _size;
+				x._capacity = _capacity;
+				_storadge = tmp;
+				_size = tmp_size;
+				_capacity = tmp_capacity;
+			}
 
 			void			clear() {
 				for (size_type n = 0 ; n < this->_size ; n++)
@@ -315,7 +330,9 @@ namespace ft {
 	}
 
 	template <class T, class Alloc>
-	void	swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
+	void	swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
+	}
 
 }
 
