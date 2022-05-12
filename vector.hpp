@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/12 20:37:45 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:31:26 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,7 +262,18 @@ namespace ft {
 				_size--;
 			}
 
-			//iterator		insert (iterator position, const value_type& val);
+			iterator		insert (iterator position, const value_type& val) {
+				value_type	aux;
+
+				_size++;
+				for (iterator it = position, last = end(); it != last; it++)
+				{
+					aux = *(it + 1);
+					*(it + 1) = *it;
+				}
+				*position = val;
+				return (position);
+			}
 			//void			insert (iterator position, size_type n, const value_type& val);
 			/*template <class InputIterator>
 			void			insert (iterator position, InputIterator first, InputIterator last);*/

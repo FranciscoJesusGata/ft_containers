@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/09 16:29:00 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:34:15 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,5 +182,11 @@ int main(void) {
 	std::cout << (stuff == cpy) << std::endl;
 	std::cout << (stuff <= cpy) << std::endl;
 	std::cout << std::noboolalpha;
+	empty.assign(10, 42);
+	print_vector(empty);
+	empty.insert(empty.begin() + 4, 21);
+	print_vector(empty);
+	empty.insert(empty.begin() + empty.capacity(), 21);
+	print_vector(empty);
 	std::cout << std::endl;
 }
