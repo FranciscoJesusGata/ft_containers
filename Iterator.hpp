@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/12 20:41:11 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/13 13:11:59 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ template <class T>
 				return (*this);
 			}
 
-			vector_iterator	&operator=(T const *rhs) {
+			vector_iterator	&operator=(T *rhs) {
 				if (rhs != this->_pointer)
 					this->_pointer = rhs;
 				return (*this);
