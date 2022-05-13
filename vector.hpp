@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/12 21:31:26 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/13 19:59:24 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ namespace ft {
 					pointer new_storadge = this->_allocator.allocate(n);
 					for (size_type m = 0; m < this->_size; m++) {
 						new_storadge[m] = this->_storadge[m];
+						_allocator.destroy(_storadge + m);
 					}
 					this->_allocator.deallocate(this->_storadge, this->_capacity);
 					this->_storadge = new_storadge;
@@ -263,18 +264,40 @@ namespace ft {
 			}
 
 			iterator		insert (iterator position, const value_type& val) {
-				value_type	aux;
-
-				_size++;
-				for (iterator it = position, last = end(); it != last; it++)
+				if (_size == _capacity)
 				{
-					aux = *(it + 1);
-					*(it + 1) = *it;
+					vector<T>	new_vector;
+					if (this->_capacity <= 1)
+						new_vector.reserve(_capacity + 1);
+					else
+						new_vector.reserve(_capacity + _capacity / 2);
+					new_vector._size = _size;
+					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it != last; ite++)
+					{
+						if (it == position) {
+							*ite = val;
+							position = ite;
+						}
+						else
+							*ite = *it++;
+					}
+					swap(new_vector);
+				} else {
+					value_type	aux;
+					for (iterator it = position, last = end(); it != last; it++)
+					{
+						aux = *it;
+						*(it + 1) = aux;
+					}
+					*position = val;
 				}
-				*position = val;
+				_size++;
 				return (position);
 			}
-			//void			insert (iterator position, size_type n, const value_type& val);
+
+			/*void			insert (iterator position, size_type n, const value_type& val) {
+				
+			}*/
 			/*template <class InputIterator>
 			void			insert (iterator position, InputIterator first, InputIterator last);*/
 			//iterator		erase (iterator position);
