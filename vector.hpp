@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/13 19:59:24 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/17 23:18:34 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,16 +264,14 @@ namespace ft {
 			}
 
 			iterator		insert (iterator position, const value_type& val) {
-				if (_size == _capacity)
-				{
+				if (_size == _capacity) {
 					vector<T>	new_vector;
 					if (this->_capacity <= 1)
 						new_vector.reserve(_capacity + 1);
 					else
 						new_vector.reserve(_capacity + _capacity / 2);
 					new_vector._size = _size;
-					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it != last; ite++)
-					{
+					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it != last; ite++) {
 						if (it == position) {
 							*ite = val;
 							position = ite;
@@ -284,8 +282,7 @@ namespace ft {
 					swap(new_vector);
 				} else {
 					value_type	aux;
-					for (iterator it = position, last = end(); it != last; it++)
-					{
+					for (iterator it = position, last = end(); it != last; it++) {
 						aux = *it;
 						*(it + 1) = aux;
 					}
@@ -295,9 +292,31 @@ namespace ft {
 				return (position);
 			}
 
-			/*void			insert (iterator position, size_type n, const value_type& val) {
-				
-			}*/
+			void			insert (iterator position, size_type n, const value_type& val) {
+				if (_size + n >= _capacity) {
+					vector<T>	new_vector;
+					if (_capacity <= 1)
+						new_vector.reserve(_capacity + 1);
+					else if (_size + n <= (_capacity + _capacity / 2))
+						new_vector.reserve(_capacity + _capacity / 2);
+					else
+						new_vector.reserve((_capacity + _capacity / 2) + n);
+					new_vector._size = _size;
+					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it != last; ite++) {
+						if (it == position)
+							for (size_t i = 0; i < n; i++, ite++)
+								*ite = val;
+						*ite = *it++;
+					}
+					swap(new_vector);
+				} else {
+					for (iterator it = begin() + _size, ite = it + n, last = position - 1; it != last; it--, ite--)
+						*ite = *it;
+					for (iterator it = position, last = position + n; it != last; it++)
+						*it = val;
+				}
+				_size += n;
+			}
 			/*template <class InputIterator>
 			void			insert (iterator position, InputIterator first, InputIterator last);*/
 			//iterator		erase (iterator position);
