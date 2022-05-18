@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/17 23:18:34 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/18 21:49:26 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,12 +266,8 @@ namespace ft {
 			iterator		insert (iterator position, const value_type& val) {
 				if (_size == _capacity) {
 					vector<T>	new_vector;
-					if (this->_capacity <= 1)
-						new_vector.reserve(_capacity + 1);
-					else
-						new_vector.reserve(_capacity + _capacity / 2);
-					new_vector._size = _size;
-					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it != last; ite++) {
+					_reallocate(new_vector, 0);
+					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite <= last; ite++) {
 						if (it == position) {
 							*ite = val;
 							position = ite;
@@ -281,11 +277,7 @@ namespace ft {
 					}
 					swap(new_vector);
 				} else {
-					value_type	aux;
-					for (iterator it = position, last = end(); it != last; it++) {
-						aux = *it;
-						*(it + 1) = aux;
-					}
+					_shift_right(position, 1);
 					*position = val;
 				}
 				_size++;
@@ -295,30 +287,48 @@ namespace ft {
 			void			insert (iterator position, size_type n, const value_type& val) {
 				if (_size + n >= _capacity) {
 					vector<T>	new_vector;
-					if (_capacity <= 1)
-						new_vector.reserve(_capacity + 1);
-					else if (_size + n <= (_capacity + _capacity / 2))
-						new_vector.reserve(_capacity + _capacity / 2);
-					else
-						new_vector.reserve((_capacity + _capacity / 2) + n);
-					new_vector._size = _size;
-					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it != last; ite++) {
+					_reallocate(new_vector, n);
+					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it <= last; ite++) {
 						if (it == position)
 							for (size_t i = 0; i < n; i++, ite++)
 								*ite = val;
+						if (it == NULL)
+							break ;
 						*ite = *it++;
 					}
 					swap(new_vector);
 				} else {
-					for (iterator it = begin() + _size, ite = it + n, last = position - 1; it != last; it--, ite--)
-						*ite = *it;
+					_shift_right(position, n);
 					for (iterator it = position, last = position + n; it != last; it++)
 						*it = val;
 				}
 				_size += n;
 			}
-			/*template <class InputIterator>
-			void			insert (iterator position, InputIterator first, InputIterator last);*/
+
+			template <class InputIterator>
+			void			insert (iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+				size_t	n = 0;
+
+				for (InputIterator it = first; it != last ; it++, n++);
+				if (_size + n >= _capacity) {
+					vector<T>	new_vector;
+					_reallocate(new_vector, n);
+					for (iterator it = begin(), ite = new_vector.begin(), finish = end(); it <= finish; ite++) {
+						for (;it == position && first != last; first++, ite++)
+							*ite = *first;
+						if (it == NULL)
+							break ;
+						*ite = *it++;
+					}
+					swap(new_vector);
+				} else {
+					_shift_right(position, n);
+					for (iterator it = position; first != last; it++, first++)
+						*it = *first;
+				}
+				_size += n;
+			}
+
 			//iterator		erase (iterator position);
 			//iterator		erase (iterator first, iterator last);
 
@@ -350,6 +360,21 @@ namespace ft {
 			pointer			_storadge;
 			size_type		_size;
 			size_type		_capacity;
+
+			void	_reallocate(vector<T> &src, size_type n) {
+				if (_capacity + n <= 1)
+					src.reserve(_capacity + 1);
+				else if (_size + n <= (_capacity + _capacity / 2))
+					src.reserve(_capacity + _capacity / 2);
+				else
+					src.reserve((_capacity + _capacity / 2) + n);
+				src._size = _size;
+			}
+
+			void	_shift_right(iterator position, size_type n) {
+				for (iterator it = begin() + _size, ite = it + n, end = position - 1; it != end; it--, ite--)
+						*ite = *it;
+			}
 	};
 
 	template <class T, class Alloc>
