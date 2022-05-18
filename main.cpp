@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/17 23:13:46 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/18 21:09:25 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,14 +188,17 @@ int main(void) {
 	print_vector(empty);
 	stuff.insert(stuff.begin(), 101);
 	print_vector(stuff);
-	std::cout << "Size: " << stuff.size() << " Capacity: " << stuff.capacity() << std::endl;
 	other_cpy.insert(other_cpy.begin() + 2, 42);
 	print_vector(other_cpy);
 	stuff.insert(stuff.begin(), 5, 98);
 	print_vector(stuff);
-	std::cout << "Size: " << stuff.size() << " Capacity: " << stuff.capacity() << std::endl;
 	stuff.insert(stuff.begin(), 9, 84);
 	print_vector(stuff);
-	std::cout << "Size: " << stuff.size() << " Capacity: " << stuff.capacity() << std::endl;
+	empty.insert(empty.begin(), stuff.begin(), stuff.begin() + 9);
+	print_vector(empty);
+
+	ft::vector<int> defaut_vct;
+	defaut_vct.insert(defaut_vct.begin(), 5, 42);
+	print_vector(defaut_vct);
 	std::cout << std::endl;
 }
