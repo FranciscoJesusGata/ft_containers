@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/18 21:49:26 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/19 18:22:55 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,8 +329,22 @@ namespace ft {
 				_size += n;
 			}
 
-			//iterator		erase (iterator position);
-			//iterator		erase (iterator first, iterator last);
+			iterator		erase (iterator position) {
+				_allocator.destroy(&(*position));
+				for (iterator it = position, finish = end() - 1; it != finish; it++) {
+					*it = *(it + 1);
+				}
+				_size--;
+			}
+
+			iterator		erase (iterator first, iterator last) {
+				for (iterator it = first; it != last; it++)
+					_allocator.destroy(&(*it));
+				for (iterator it = first, ite = begin() + (last - first), finish = end(); ite != finish; it++, ite++) {
+					*it = *ite;
+				}
+				_size -= last- first;
+			}
 
 			void			swap (vector& x) {
 				pointer		tmp = x._storadge;
