@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/19 18:22:55 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/20 12:45:04 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <functional>
 # include <stdexcept>
 # include <Iterator.hpp>
+# include <typeinfo>
+# include <iostream>
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -39,12 +41,9 @@ namespace ft {
 
 			vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
 				_allocator(alloc), _storadge(_allocator.allocate(n)), _size(n), _capacity(n) {
-				size_type	counter = 0;
-
-				while (counter < n) {
-					this->_storadge[counter] = val;
-					counter++;
-				}
+				
+				for (size_type i = 0; i < n; i++)
+					_allocator.construct(_storadge + i, val);
 			}
 
 			template <class InputIterator>
@@ -141,7 +140,7 @@ namespace ft {
 					pointer new_storadge = this->_allocator.allocate(n);
 					for (size_type m = 0; m < n; m++) {
 						if (m < this->_size)
-							new_storadge[m] = this->_storadge[m];
+							this->_allocator.construct(new_storadge + m, this->_storadge[m]);
 						else
 							new_storadge[m] = val;
 					}
@@ -166,7 +165,7 @@ namespace ft {
 				if (n > this->_capacity) {
 					pointer new_storadge = this->_allocator.allocate(n);
 					for (size_type m = 0; m < this->_size; m++) {
-						new_storadge[m] = this->_storadge[m];
+						this->_allocator.construct(new_storadge + m, this->_storadge[m]);
 						_allocator.destroy(_storadge + m);
 					}
 					this->_allocator.deallocate(this->_storadge, this->_capacity);
@@ -292,7 +291,7 @@ namespace ft {
 						if (it == position)
 							for (size_t i = 0; i < n; i++, ite++)
 								*ite = val;
-						if (it == NULL)
+						if (it == last)
 							break ;
 						*ite = *it++;
 					}
