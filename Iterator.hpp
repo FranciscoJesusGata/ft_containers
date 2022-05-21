@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/21 15:27:10 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/21 19:56:33 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,11 @@ template <class T>
 				return (temp);
 			}
 
-			vector_iterator	operator+(difference_type n) const {
+			vector_iterator	operator+(int n) const {
 				return (this->_pointer + n);
 			}
 
-			vector_iterator	operator-(difference_type n) const {
+			vector_iterator	operator-(int n) const {
 				return (this->_pointer - n);
 			}
 
@@ -120,12 +120,32 @@ template <class T>
 				return (this->_pointer - lhs._pointer);
 			}
 
-			void	operator+=(vector_iterator const &lhs) {
-				*this = *this + lhs;
+			friend vector_iterator	operator+(int n, vector_iterator const& rhs) {
+				return (rhs._pointer + n);
 			}
 
-			void	operator-=(vector_iterator const &lhs) {
+			friend vector_iterator	operator-(int n, vector_iterator const& rhs) {
+				return (rhs._pointer - n);
+			}
+
+			vector_iterator	&operator+=(vector_iterator const &lhs) {
+				*this = *this + lhs;
+				return (*this);
+			}
+
+			vector_iterator	&operator-=(vector_iterator const &lhs) {
 				*this = *this - lhs;
+				return (*this);
+			}
+
+			vector_iterator	&operator+=(int n) {
+				this->_pointer = this->_pointer + n;
+				return (*this);
+			}
+
+			vector_iterator	&operator-=(int n) {
+				this->_pointer = this->_pointer - n;
+				return (*this);
 			}
 
 			T	&operator[](size_t n) {
@@ -136,7 +156,6 @@ template <class T>
 				return (this->_pointer[n]);
 			}
 	};
-
 }
 
 #endif
