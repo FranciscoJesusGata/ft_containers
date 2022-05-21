@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/21 15:30:37 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/21 18:44:18 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,17 +334,17 @@ namespace ft {
 					*it = *(it + 1);
 				}
 				_size--;
-				return (position + 1);
+				return (position);
 			}
 
 			iterator		erase (iterator first, iterator last) {
 				for (iterator it = first; it != last; it++)
 					_allocator.destroy(&(*it));
-				for (iterator it = first, ite = begin() + (last - first), finish = end(); ite != finish; it++, ite++) {
+				for (iterator it = first, ite = last, finish = end(); it != finish; it++, ite++) {
 					*it = *ite;
 				}
 				_size -= last - first;
-				return (last + 1);
+				return (first);
 			}
 
 			void			swap (vector& x) {
