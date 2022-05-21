@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Iterator.hpp                                      :+:      :+:    :+:   */
+/*   Iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/13 13:11:59 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/21 15:27:10 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ template <class T>
 			vector_iterator(): _pointer(NULL) {}
 			vector_iterator(T *src): _pointer(src) {}
 			vector_iterator(vector_iterator const &src): _pointer(src._pointer) {}
+			template <class U> vector_iterator(vector_iterator<U> const &src): _pointer(&(*src)) {}
 			~vector_iterator() {}
 
 			vector_iterator	&operator=(vector_iterator const & rhs) {
@@ -70,6 +71,14 @@ template <class T>
 			}
 
 			T				&operator*() const {
+				return (*this->_pointer);
+			}
+
+			T				&operator->() {
+				return (*this->_pointer);
+			}
+
+			T				&operator->() const {
 				return (*this->_pointer);
 			}
 
