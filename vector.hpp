@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/21 18:44:18 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/22 17:41:32 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ namespace ft {
 			typedef typename allocator_type::const_pointer			const_pointer ;
 			typedef typename ft::vector_iterator<value_type>		iterator;
 			typedef typename ft::vector_iterator<value_type const>	const_iterator;
-			//Reverse iterator left
-			typedef size_t										size_type;
+			typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
+			typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef size_t											size_type;
 
 			//Contructors
 			vector (const allocator_type& alloc = allocator_type()): _allocator(alloc), _storadge(NULL), _size(0), _capacity(0) {}
@@ -108,11 +109,22 @@ namespace ft {
 				return (const_iterator(this->_storadge + this->_size));
 			}
 
-			/*reverse_iterator		rbegin();
-			const_reverse_iterator	rbegin() const;
-			reverse_iterator		rend();
-			const_reverse_iterator	rend() const;
-			*/
+			reverse_iterator		rbegin() {
+				return (reverse_iterator(end()));
+			}
+
+			const_reverse_iterator	rbegin() const {
+				return (reverse_iterator(end()));
+			}
+
+			reverse_iterator		rend() {
+				return (reverse_iterator(begin()));
+			}
+
+			const_reverse_iterator	rend() const {
+				return (reverse_iterator(begin()));
+			}
+
 
 			//Capacity functions
 			size_type		size() const {

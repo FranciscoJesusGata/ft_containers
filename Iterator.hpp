@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/22 16:52:17 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/22 17:43:14 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,61 @@
 # include <iterator_traits.hpp>
 
 namespace ft {
-template <class T>
+
+	template <class It>
+	class	reverse_iterator {
+		public:
+			typedef It												iterator_type;
+			typedef typename iterator_traits<It>::difference_type	difference_type;
+			typedef typename iterator_traits<It>::value_type		value_type;
+			typedef typename iterator_traits<It>::pointer			pointer;
+			typedef typename iterator_traits<It>::reference			reference;
+			typedef typename iterator_traits<It>::iterator_category	random_access_iterator_tag;
+
+			reverse_iterator(): _base() {}
+			explicit reverse_iterator(iterator_type it): _base(it) {}
+			template <class Iter>
+			reverse_iterator(const reverse_iterator<Iter>& rev_it): _base(rev_it.base()) {}
+
+			iterator_type		base() const { return (_base); }
+			//dereference operators
+			reference			operator*() const { return (*_base); }
+			reference			operator[](difference_type n) const { return (_base[n]); }
+			pointer				operator->() const { return _base.getPointer(); }
+			//arithmetic operators
+			reverse_iterator	operator+(difference_type n) const { return (_base - n); }
+			reverse_iterator	operator-(difference_type n) const { return (_base + n); }
+			reverse_iterator	&operator++() {
+				--_base;
+				return (*this);
+			}
+			reverse_iterator	operator++(int) {
+				reverse_iterator tmp(*this);
+				++(*this);
+				return (tmp);
+			}
+			reverse_iterator	&operator--() {
+				++_base;
+				return (*this);
+			}
+			reverse_iterator	operator--(int) {
+				reverse_iterator tmp(*this);
+				--(*this);
+				return (tmp);
+			}
+			reverse_iterator	&operator+=(difference_type n) {
+				_base -= n;
+				return (*this);
+			}
+			reverse_iterator	&operator-=(difference_type n) {
+				_base += n;
+				return (*this);
+			}
+		private:
+			iterator_type	_base;
+	};
+
+	template <class T>
 	class vector_iterator: public std::iterator<std::random_access_iterator_tag, T> {
 		public:
 			typedef typename iterator_traits<T*>::difference_type	difference_type;
@@ -70,10 +124,6 @@ template <class T>
 
 			bool			operator>=(vector_iterator const& rhs) const {
 				return (rhs <= *this);
-			}
-
-			bool			operator<(vector_iterator const& rhs) const {
-				return (this->_pointer < rhs.getPointer());
 			}
 
 			template <class U>
