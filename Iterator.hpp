@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/21 19:56:33 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/22 16:10:36 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,13 @@ template <class T>
 
 			vector_iterator(): _pointer(NULL) {}
 			vector_iterator(T *src): _pointer(src) {}
-			vector_iterator(vector_iterator const &src): _pointer(src._pointer) {}
-			template <class U> vector_iterator(vector_iterator<U> const &src): _pointer(&(*src)) {}
+			vector_iterator(vector_iterator const &src) { _pointer = src.getPointer(); }
+			template <class U> vector_iterator(vector_iterator<U> const &src): _pointer(src.getPointer()) {}
 			~vector_iterator() {}
+
+			T			*getPointer() const {
+				return (_pointer);
+			}
 
 			vector_iterator	&operator=(vector_iterator const & rhs) {
 				if (rhs._pointer != this->_pointer)
@@ -42,27 +46,41 @@ template <class T>
 				return (*this);
 			}
 
-			bool			operator<(vector_iterator const& rhs) const {
-				return (this->_pointer < rhs._pointer);
+			template <class U>
+			bool			operator<(vector_iterator<U> const& rhs) const {
+				return (this->_pointer < rhs.getPointer());
 			}
 
-			bool			operator>(vector_iterator const& rhs) const {
+			template <class U>
+			bool			operator>(vector_iterator<U> const& rhs) const {
 				return (rhs < *this);
 			}
 
-			bool			operator<=(vector_iterator const& rhs) const {
-				return (this->_pointer <= rhs._pointer);
+			template <class U>
+			bool			operator<=(vector_iterator<U> const& rhs) const {
+				return (this->_pointer <= rhs.getPointer());
 			}
 
-			bool			operator>=(vector_iterator const& rhs) const {
+			template <class U>
+			bool			operator>=(vector_iterator<U> const& rhs) const {
 				return (rhs <= *this);
 			}
 
 			bool			operator==(vector_iterator const& rhs) const {
-				return (this->_pointer == rhs._pointer);
+				return (this->_pointer == rhs.getPointer());
 			}
-			
+
 			bool			operator!=(vector_iterator const& rhs) const {
+				return (!(*this == rhs));
+			}
+
+			template <class U>
+			bool			operator==(vector_iterator<U> const& rhs) const {
+				return (this->_pointer == rhs.getPointer());
+			}
+
+			template <class U>
+			bool			operator!=(vector_iterator<U> const& rhs) const {
 				return (!(*this == rhs));
 			}
 
@@ -74,12 +92,12 @@ template <class T>
 				return (*this->_pointer);
 			}
 
-			T				&operator->() {
-				return (*this->_pointer);
+			T			*operator->() {
+				return (this->_pointer);
 			}
 
-			T				&operator->() const {
-				return (*this->_pointer);
+			T			*operator->() const {
+				return (this->_pointer);
 			}
 
 			vector_iterator	&operator++() {
