@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/22 17:41:32 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/25 20:06:36 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,10 +275,13 @@ namespace ft {
 			}
 
 			iterator		insert (iterator position, const value_type& val) {
-				if (_size == _capacity) {
+				if (_size == _capacity || position >= end()) {
 					vector<T>	new_vector;
-					_reallocate(new_vector, 0);
-					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite <= last; ite++) {
+					if (position > end())
+						_reallocate(new_vector, position - end() + 1);
+					else
+						_reallocate(new_vector, 1);
+					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite != last; ite++) {
 						if (it == position) {
 							*ite = val;
 							position = ite;
@@ -290,8 +293,8 @@ namespace ft {
 				} else {
 					_shift_right(position, 1);
 					*position = val;
+					_size++;
 				}
-				_size++;
 				return (position);
 			}
 
@@ -312,8 +315,8 @@ namespace ft {
 					_shift_right(position, n);
 					for (iterator it = position, last = position + n; it != last; it++)
 						*it = val;
-				}
-				_size += n;
+					_size += n;
+				}	
 			}
 
 			template <class InputIterator>
@@ -327,7 +330,7 @@ namespace ft {
 					for (iterator it = begin(), ite = new_vector.begin(), finish = end(); it <= finish; ite++) {
 						for (;it == position && first != last; first++, ite++)
 							*ite = *first;
-						if (it == NULL)
+						if (it == finish)
 							break ;
 						*ite = *it++;
 					}
@@ -336,8 +339,8 @@ namespace ft {
 					_shift_right(position, n);
 					for (iterator it = position; first != last; it++, first++)
 						*it = *first;
+					_size += n;
 				}
-				_size += n;
 			}
 
 			iterator		erase (iterator position) {
@@ -395,7 +398,7 @@ namespace ft {
 					src.reserve(_capacity + _capacity / 2);
 				else
 					src.reserve((_capacity + _capacity / 2) + n);
-				src._size = _size;
+				src._size = _size + n;
 			}
 
 			void	_shift_right(iterator position, size_type n) {
