@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/22 17:43:14 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/05/25 14:42:33 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ namespace ft {
 
 			iterator_type		base() const { return (_base); }
 			//dereference operators
-			reference			operator*() const { return (*_base); }
+			reference			operator*() const { return (*(_base - 1)); }
 			reference			operator[](difference_type n) const { return (_base[n]); }
 			pointer				operator->() const { return _base.getPointer(); }
 			//arithmetic operators
-			reverse_iterator	operator+(difference_type n) const { return (_base - n); }
-			reverse_iterator	operator-(difference_type n) const { return (_base + n); }
+			reverse_iterator	operator+(difference_type n) const { return (reverse_iterator(_base - n)); }
+			reverse_iterator	operator-(difference_type n) const { return (reverse_iterator(_base + n)); }
 			reverse_iterator	&operator++() {
 				--_base;
 				return (*this);
