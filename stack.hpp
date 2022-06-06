@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:17:32 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/26 20:26:01 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:54:46 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace ft {
 			bool friend operator> (const stack& x,const stack& y) { return (x.c > y.c); }
 			bool friend operator>=(const stack& x,const stack& y) { return (x.c >= y.c); }
 			bool friend operator<=(const stack& x,const stack& y) { return (x.c <= y.c); }
-		private:
+		protected:
 			container_type	c;
 	};
 };
