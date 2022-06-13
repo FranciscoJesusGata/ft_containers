@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/06/13 12:45:58 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/06/13 20:10:52 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,32 +65,25 @@ namespace ft {
 				}
 			}
 
-			vector (const vector &x) {
-				if (*this != x)
-					*this = x;
+			vector (const vector &x): _allocator(x._allocator), _size(x._size), _capacity(x._capacity) {
+				this->_storadge = _allocator.allocate(_capacity);
+				for (size_type n = 0; n < this->_size ; n++)
+					_allocator.construct(_storadge + n, x[n]);
 			}
 
 			~vector(void) {
-				size_type counter = 0;
-
-				while (counter < this->_size) {
-					this->_allocator.destroy(this->_storadge + counter);
-					counter++;
-				}
+				for (size_type n = 0 ; n < this->_size ; n++)
+					this->_allocator.destroy(this->_storadge + n);
 				this->_allocator.deallocate(this->_storadge, this->_capacity);
 			}
 
 			vector&			operator= (const vector& x) {
-				size_type		n = 0;
-
 				this->_size = x._size;
 				this->_capacity = x._capacity;
-				this->_allocator = x._allocator;
-				this->_storadge = _allocator.allocate(x._capacity);
-				while (n < this->_size) {
-					_allocator.construct(_storadge + n, x[n]);
-					n++;
-				}
+				if (_capacity < x._capacity)
+					reserve(x._capacity);
+				for (size_type n = 0; n < this->_size ; n++)
+					_storadge[n] = x[n];
 				return (*this);
 			}
 
@@ -234,11 +227,12 @@ namespace ft {
 					size++; 
 					it++;
 				}
-				if (size > this->_capacity) {
-					pointer new_storadge = this->_allocator.allocate(size);
-					this->_allocator.deallocate(this->_storadge, this->_capacity);
-					this->_storadge = new_storadge;
-					this->_capacity = size;
+				if (size > this->_capacity)
+					reserve(size);
+				else if (size < _size)
+				{
+					for (size_t n = size ; n < _size ; n++)
+						_allocator.destroy(_storadge + n);
 				}
 				it = first;
 				while (index < size) {
@@ -249,11 +243,12 @@ namespace ft {
 			}
 
 			void			assign (size_type n, const value_type& val) {
-				if (n > this->_capacity) {
-					pointer new_storadge = this->_allocator.allocate(n);
-					this->_allocator.deallocate(this->_storadge, this->_capacity);
-					this->_storadge = new_storadge;
-					this->_capacity = n;
+				if (n > this->_capacity)
+					reserve(n);
+				else if (n < _size)
+				{
+					for (size_t i = n ; i < _size ; i++)
+						_allocator.destroy(_storadge + i);
 				}
 				for (size_type m = 0; m < n; m++)
 					this->_storadge[m] = val;
