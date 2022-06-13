@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/25 20:06:36 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/06/13 12:45:58 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ namespace ft {
 				}
 			}
 
-			vector (const vector &x): _allocator(allocator_type()) {
+			vector (const vector &x) {
 				if (*this != x)
 					*this = x;
 			}
@@ -85,9 +85,10 @@ namespace ft {
 
 				this->_size = x._size;
 				this->_capacity = x._capacity;
+				this->_allocator = x._allocator;
 				this->_storadge = _allocator.allocate(x._capacity);
 				while (n < this->_size) {
-					this->_storadge[n] = x._storadge[n];
+					_allocator.construct(_storadge + n, x[n]);
 					n++;
 				}
 				return (*this);
@@ -266,7 +267,8 @@ namespace ft {
 					else
 						reserve(this->_capacity + this->_capacity / 2);
 				}
-				this->_storadge[this->_size++] = val;
+				_allocator.construct(_storadge + _size, val);
+				_size++;
 			}
 
 			void			pop_back() {
@@ -344,21 +346,23 @@ namespace ft {
 			}
 
 			iterator		erase (iterator position) {
-				_allocator.destroy(&(*position));
 				for (iterator it = position, finish = end() - 1; it != finish; it++) {
 					*it = *(it + 1);
 				}
+				_allocator.destroy(end().getPointer());
 				_size--;
 				return (position);
 			}
 
 			iterator		erase (iterator first, iterator last) {
-				for (iterator it = first; it != last; it++)
-					_allocator.destroy(&(*it));
+				size_t	n = last - first;
+
 				for (iterator it = first, ite = last, finish = end(); it != finish; it++, ite++) {
 					*it = *ite;
 				}
-				_size -= last - first;
+				for (iterator it = end(), finish = it + n; it < finish; it++)
+					_allocator.destroy(it.getPointer());
+				_size -= n;
 				return (first);
 			}
 
@@ -402,8 +406,8 @@ namespace ft {
 			}
 
 			void	_shift_right(iterator position, size_type n) {
-				for (iterator it = begin() + _size, ite = it + n, end = position - 1; it != end; it--, ite--)
-						*ite = *it;
+				for (iterator it = end() + n, ite = end(), last = position ; ite != last ; it--, ite--)
+					*it = *ite;
 			}
 	};
 
