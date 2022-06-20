@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/06/20 20:59:24 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/06/20 21:29:40 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ namespace ft {
 			}
 
 			vector&			operator= (const vector& x) {
-				this->_size = x._size;
-				this->_capacity = x._capacity;
+				this->_allocator = x._allocator;
 				if (_capacity < x._capacity)
 					reserve(x._capacity);
+				this->_size = x._size;
 				for (size_type n = 0; n < this->_size ; n++)
 					_storadge[n] = x[n];
 				return (*this);
@@ -399,7 +399,7 @@ namespace ft {
 			}
 
 			void	_shift_right(iterator position, size_type n) {
-				for (iterator it = end() + n, ite = end(), last = position ; ite != last ; it--, ite--)
+				for (iterator it = end() + n, ite = end(), last = position - 1 ; ite != last ; it--, ite--)
 					*it = *ite;
 			}
 	};
