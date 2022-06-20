@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/06/13 20:10:52 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/06/20 20:59:24 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,12 +272,10 @@ namespace ft {
 			}
 
 			iterator		insert (iterator position, const value_type& val) {
-				if (_size == _capacity || position >= end()) {
+				if (_size == _capacity || position == end()) {
 					vector<T>	new_vector;
-					if (position > end())
-						_reallocate(new_vector, position - end() + 1);
-					else
-						_reallocate(new_vector, 1);
+
+					_reallocate(new_vector, 1);
 					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite != last; ite++) {
 						if (it == position) {
 							*ite = val;
@@ -352,12 +350,12 @@ namespace ft {
 			iterator		erase (iterator first, iterator last) {
 				size_t	n = last - first;
 
-				for (iterator it = first, ite = last, finish = end(); it != finish; it++, ite++) {
+				for (iterator it = first, ite = last, finish = end(); ite != finish; it++, ite++) {
 					*it = *ite;
 				}
+				_size -= n;
 				for (iterator it = end(), finish = it + n; it < finish; it++)
 					_allocator.destroy(it.getPointer());
-				_size -= n;
 				return (first);
 			}
 
