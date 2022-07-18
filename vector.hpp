@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/06/20 21:29:40 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/07/18 17:57:55 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <stdexcept>
 # include <Iterator.hpp>
 # include <typeinfo>
-# include <iostream>
 
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
@@ -79,11 +78,16 @@ namespace ft {
 
 			vector&			operator= (const vector& x) {
 				this->_allocator = x._allocator;
-				if (_capacity < x._capacity)
-					reserve(x._capacity);
+				for (size_type n = 0; n < this->_size; n++)
+					_allocator.destroy(_storadge + n);
+				if (this->_capacity < x._size) {
+					_allocator.deallocate(_storadge, _capacity);
+					this->_storadge = _allocator.allocate(x._size);
+					this->_capacity = x._size;
+				}
 				this->_size = x._size;
 				for (size_type n = 0; n < this->_size ; n++)
-					_storadge[n] = x[n];
+					_allocator.construct(_storadge + n, x[n]);
 				return (*this);
 			}
 
@@ -342,8 +346,8 @@ namespace ft {
 				for (iterator it = position, finish = end() - 1; it != finish; it++) {
 					*it = *(it + 1);
 				}
-				_allocator.destroy(end().getPointer());
 				_size--;
+				_allocator.destroy(end().getPointer());
 				return (position);
 			}
 
