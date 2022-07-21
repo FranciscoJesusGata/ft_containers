@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/06/07 21:14:00 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/07/21 20:48:47 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <iostream>
 
 enum	e_color {BLACK, RED};
+enum	e_dir {LEFT, RIGHT};
 
 template <class T, class Alloc >
 struct RBTreeNode
@@ -26,7 +27,7 @@ struct RBTreeNode
 	Alloc				allocator;
 	T					item;
 
-	RBTreeNode(const T &val, Alloc allocator = Alloc()): parent(NULL), left(NULL), right(NULL), color(RED), allocator(allocator), item(val) {}
+	RBTreeNode(const T &val, Alloc allocator = Alloc()): parent(NULL), left(NULL), right(NULL), color(RED), allocator(allocator) { allocator.construct(&item, val); }
 	~RBTreeNode() { allocator.destroy(&item); }
 };
 
@@ -39,9 +40,7 @@ struct RBTree
 	Alloc							allocator;
 
 	RBTree(const Alloc &alloc = Alloc(), const Compare &comp = Compare()): root(NULL), cmp(comp), allocator(alloc) {}
-	~RBTree() {
-		delete_tree(root);
-	}
+	~RBTree() { delete_tree(root); }
 
 	void	insert(const T &item) {
 		Node *parent = NULL;
@@ -63,19 +62,20 @@ struct RBTree
 			parent->left = new_node;
 		else
 			parent->right = new_node;
+		insert_fixup(new_node);
 	}
-	
+
 	Node	*rotate(Node *node, int dir) {
 		Node	*son = (dir ? node->left : node->right);
-		Node	*grand_son;
+		Node	*grandson;
 		Node	*grandpa;
 
 		if (!son)
 			return (NULL);
-		grand_son = (dir ? son->right : son->left);
-		if (grand_son)
-			grand_son->parent = node;
-		(dir ? node->left : node->right) = grand_son;
+		grandson = (dir ? son->right : son->left);
+		if (grandson)
+			grandson->parent = node;
+		(dir ? node->left : node->right) = grandson;
 		(dir ? son->right : son->left) = node;
 		grandpa = node->parent;
 		son->parent = grandpa;
@@ -88,7 +88,44 @@ struct RBTree
 	}
 
 	private:
-	
+
+	void	insert_fixup(Node *new_node)
+	{
+		Node *parent = new_node->parent;
+		Node *uncle;
+		Node *grandpa;
+
+		while (parent && parent->color == RED)
+		{
+			uncle = (parent == parent->parent->left ? parent->parent->right : parent->parent->left);
+			if (uncle && uncle->color == RED) {
+				parent->color = BLACK;
+				parent->parent->color = RED;
+				uncle->color = BLACK;
+				new_node = parent->parent;
+			}
+			else if ((new_node == parent->left && parent == parent->parent->right)
+				|| (new_node == parent->right && parent == parent->parent->left)) {
+					if (new_node == parent->left)
+						rotate(parent, RIGHT);
+					else
+						rotate(parent, LEFT);
+					new_node = parent;
+			}
+			else {
+				grandpa = parent->parent;
+				if (new_node == parent->left)
+					rotate(grandpa, RIGHT);
+				else
+					rotate(grandpa, LEFT);
+				parent->color = BLACK;
+				grandpa->color = RED;
+			}
+			parent = new_node->parent;
+		}
+		root->color = BLACK;
+	}
+
 	void	delete_tree(Node *tree) {
 		if (tree)
 		{
@@ -103,12 +140,22 @@ struct RBTree
 
 template <class T, class Alloc >
 void	in_order_print(RBTreeNode<T, Alloc> *tree) {
-		if (tree)
-		{
-			in_order_print(tree->left);
-			std::cout << tree->item << std::endl;
-			in_order_print(tree->right);
-		}
+	if (tree)
+	{
+		in_order_print(tree->left);
+		std::cout << "[ "<< (tree->color ? "RED" : "BLACK") << " ]" << ": " << tree->item << std::endl;
+		in_order_print(tree->right);
 	}
+}
+
+template <class T, class Alloc >
+void	pre_order_print(RBTreeNode<T, Alloc> *tree) {
+	if (tree)
+	{
+		std::cout << "[ "<< (tree->color ? "RED" : "BLACK") << " ]" << ": " << tree->item << std::endl;
+		pre_order_print(tree->left);
+		pre_order_print(tree->right);
+	}
+}
 
 #endif
