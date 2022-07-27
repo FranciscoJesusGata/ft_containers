@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/25 21:58:01 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/07/27 21:28:46 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
-# include <iterator>
 # include <cstddef>
 # include <iterator_traits.hpp>
 
@@ -22,11 +21,11 @@ namespace ft {
 	class	reverse_iterator {
 		public:
 			typedef It												iterator_type;
-			typedef typename iterator_traits<It>::difference_type	difference_type;
-			typedef typename iterator_traits<It>::value_type		value_type;
-			typedef typename iterator_traits<It>::pointer			pointer;
-			typedef typename iterator_traits<It>::reference			reference;
-			typedef typename iterator_traits<It>::iterator_category	random_access_iterator_tag;
+			typedef typename ft::iterator_traits<It>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<It>::value_type		value_type;
+			typedef typename ft::iterator_traits<It>::pointer			pointer;
+			typedef typename ft::iterator_traits<It>::reference			reference;
+			typedef typename ft::iterator_traits<It>::iterator_category	random_access_iterator_tag;
 
 			reverse_iterator(): _base() {}
 			explicit reverse_iterator(iterator_type it): _base(it) {}
@@ -117,11 +116,11 @@ namespace ft {
 	template <class T>
 	class vector_iterator: public std::iterator<std::random_access_iterator_tag, T> {
 		public:
-			typedef typename iterator_traits<T*>::difference_type	difference_type;
-			typedef typename iterator_traits<T*>::value_type		value_type;
-			typedef typename iterator_traits<T*>::pointer			pointer;
-			typedef typename iterator_traits<T*>::reference			reference;
-			typedef typename iterator_traits<T*>::iterator_category	random_access_iterator_tag;
+			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<T*>::value_type		value_type;
+			typedef typename ft::iterator_traits<T*>::pointer			pointer;
+			typedef typename ft::iterator_traits<T*>::reference			reference;
+			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
 
 			vector_iterator(): _pointer(NULL) {}
 			vector_iterator(T *src): _pointer(src) {}
