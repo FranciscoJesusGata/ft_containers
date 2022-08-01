@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RBTree.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/07/21 20:48:47 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/01 22:22:35 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,44 +17,44 @@
 enum	e_color {BLACK, RED};
 enum	e_dir {LEFT, RIGHT};
 
-template <class T, class Alloc >
+template <class T>
 struct RBTreeNode
 {
 	struct RBTreeNode	*parent;
 	struct RBTreeNode	*left;
 	struct RBTreeNode	*right;
 	e_color				color;
-	Alloc				allocator;
 	T					item;
-
-	RBTreeNode(const T &val, Alloc allocator = Alloc()): parent(NULL), left(NULL), right(NULL), color(RED), allocator(allocator) { allocator.construct(&item, val); }
-	~RBTreeNode() { allocator.destroy(&item); }
 };
 
 template <class T, class Compare, class Alloc>
 struct RBTree
 {
-	typedef RBTreeNode<T, Alloc>	Node;
-	Node							*root;
-	Compare							cmp;
-	Alloc							allocator;
+	typedef RBTreeNode<T>								node_type;
+	node_type											*root;
+	Compare												cmp;
+	typename Alloc::template rebind<node_type>::other	node_allocator;
 
-	RBTree(const Alloc &alloc = Alloc(), const Compare &comp = Compare()): root(NULL), cmp(comp), allocator(alloc) {}
+	RBTree(const Alloc &alloc = Alloc(), const Compare &comp = Compare()): root(NULL), cmp(comp), node_allocator(alloc) {}
 	~RBTree() { delete_tree(root); }
 
 	void	insert(const T &item) {
-		Node *parent = NULL;
-		Node *it = root;
-		Node *new_node = new Node(item);
+		node_type *parent = NULL;
+		node_type *it = root;
+		node_type *new_node;
 
 		while (it)
 		{
 			parent = it;
-			if (cmp(new_node->item, it->item))
+			if (cmp(item, it->item)) {
+				if (cmp(item, it->item))
+					return ;
 				it = it->left;
+			}
 			else
 				it = it->right;
 		}
+		new_node = create_node(item);
 		new_node->parent = parent;
 		if (!parent)
 			root = new_node;
@@ -65,10 +65,10 @@ struct RBTree
 		insert_fixup(new_node);
 	}
 
-	Node	*rotate(Node *node, int dir) {
-		Node	*son = (dir ? node->left : node->right);
-		Node	*grandson;
-		Node	*grandpa;
+	node_type	*rotate(node_type *node, int dir) {
+		node_type	*son = (dir ? node->left : node->right);
+		node_type	*grandson;
+		node_type	*grandpa;
 
 		if (!son)
 			return (NULL);
@@ -89,11 +89,27 @@ struct RBTree
 
 	private:
 
-	void	insert_fixup(Node *new_node)
+	node_type	*create_node(const T &item) {
+		node_type *node;
+	
+		node = node_allocator.allocate(sizeof(node_type));
+		node->item = item;
+		node->color = RED;
+		node->left = NULL;
+		node->right = NULL;
+		return (node);
+	}
+
+	void		destroy_node(node_type *node) {
+		node_allocator.destroy(&node);
+		node_allocator.deallocate(&node, sizeof(node_type));
+	}
+
+	void	insert_fixup(node_type *new_node)
 	{
-		Node *parent = new_node->parent;
-		Node *uncle;
-		Node *grandpa;
+		node_type *parent = new_node->parent;
+		node_type *uncle;
+		node_type *grandpa;
 
 		while (parent && parent->color == RED)
 		{
@@ -126,20 +142,21 @@ struct RBTree
 		root->color = BLACK;
 	}
 
-	void	delete_tree(Node *tree) {
+	void	delete_tree(node_type *tree) {
 		if (tree)
 		{
 			delete_tree(tree->left);
 			delete_tree(tree->right);
-			delete tree;
+			node_allocator.destroy(tree);
+			node_allocator.deallocate(tree, sizeof(node_type));
 			tree = NULL;
 		}
 	}
 
 };
 
-template <class T, class Alloc >
-void	in_order_print(RBTreeNode<T, Alloc> *tree) {
+template <class T>
+void	in_order_print(RBTreeNode<T> *tree) {
 	if (tree)
 	{
 		in_order_print(tree->left);
@@ -148,8 +165,8 @@ void	in_order_print(RBTreeNode<T, Alloc> *tree) {
 	}
 }
 
-template <class T, class Alloc >
-void	pre_order_print(RBTreeNode<T, Alloc> *tree) {
+template <class T >
+void	pre_order_print(RBTreeNode<T> *tree) {
 	if (tree)
 	{
 		std::cout << "[ "<< (tree->color ? "RED" : "BLACK") << " ]" << ": " << tree->item << std::endl;
