@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/07/27 21:28:46 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/03 00:09:25 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 # define ITERATOR_HPP
 # include <cstddef>
 # include <iterator_traits.hpp>
+# include <RBTree.hpp>
 
 namespace ft {
 
 	template <class It>
 	class	reverse_iterator {
 		public:
-			typedef It												iterator_type;
+			typedef It													iterator_type;
 			typedef typename ft::iterator_traits<It>::difference_type	difference_type;
 			typedef typename ft::iterator_traits<It>::value_type		value_type;
 			typedef typename ft::iterator_traits<It>::pointer			pointer;
@@ -266,6 +267,115 @@ namespace ft {
 
 		private:
 			T*	_pointer;
+	};
+
+	template <class T, class Cmp, class Alloc>
+	class map_iterator: public std::iterator<std::bidirectional_iterator_tag, T, Cmp> {
+		private:
+			typedef RBTreeNode<T>										node_type;
+			ft::RBTree<T, Cmp, Alloc>									*_tree;
+			node_type													*_node;
+		public:
+			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<T*>::value_type		value_type;
+			typedef typename ft::iterator_traits<T*>::pointer			pointer;
+			typedef typename ft::iterator_traits<T*>::reference			reference;
+			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
+
+			map_iterator(): _node(NULL) {}
+			map_iterator(node_type *src): _node(src) {}
+			map_iterator(map_iterator const &src): _node(src.getPointer()) {}
+			template <class U> map_iterator(map_iterator<U, Cmp, Alloc> const &src): _node(&(*src._node)) {}
+			~map_iterator() {}
+
+			pointer			*getPointer() const {
+				return (_node);
+			}
+			map_iterator	&operator=(map_iterator const &rhs) {
+				if (rhs._node != this->_node)
+					this->_node = rhs._node;
+				return (*this);
+			}
+
+			template <class U>
+			bool			operator==(map_iterator<U, Cmp, Alloc> const& rhs) const {
+				return (this->_pointer == rhs.getPointer());
+			}
+
+			template <class U>
+			bool			operator!=(map_iterator<U, Cmp, Alloc> const& rhs) const {
+				return (!(*this == rhs));
+			}
+
+			reference		operator*() {
+				return (*this->_pointer);
+			}
+
+			reference		operator*() const {
+				return (*this->_pointer);
+			}
+
+			pointer		operator->() {
+				return (this->_pointer);
+			}
+
+			pointer		operator->() const {
+				return (this->_pointer);
+			}
+
+			map_iterator	&operator++() {
+				if (_node) {
+					if (_node->right) {
+						_node = _node->right;
+						while (_node->left)
+							_node = _node->left;
+					}
+					else {
+						while (_node->parent && _node == _node->parent->right)
+							_node = _node->parent;
+						_node = _node->parent;
+					}
+				}
+				else {
+					_node = _tree->root;
+					while (_node)
+						_node = _node->left;
+				}
+				return (*this);
+			}
+
+			map_iterator	operator++(int) {
+				map_iterator	temp(*this);
+				++(*this);
+				return (temp);
+			}
+
+			map_iterator	&operator--() {
+				if (_node) {
+					if (_node->left) {
+						_node = _node->left;
+						while (_node->right)
+							_node = _node->right;
+					}
+					else {
+						while (_node->parent && _node == _node->parent->left)
+							_node = _node->parent;
+						_node = _node->parent;
+					}
+				}
+				else {
+					_node = _tree->root;
+					while (_node)
+						_node = _node->right;
+				}
+				return (*this);
+			}
+
+			map_iterator	operator--(int) {
+				map_iterator	temp(*this);
+				--this->_pointer;
+				return (temp);
+			}
 	};
 }
 
