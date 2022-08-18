@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/03 00:28:36 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/17 19:25:06 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@
 # include <utility.hpp>
 # include <iterator_traits.hpp>
 # include <RBTree.hpp>
+# include <Iterator.hpp>
 
 namespace ft {
 template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > > 
 	class map {
 		private:
-			typedef ft::RBTree<ft::pair<const Key, T>, Compare, Alloc >							tree_type;
-			typedef	ft::RBTreeNode<ft::pair<const Key, T> >										node_type;
+			typedef ft::RBTree<const Key, T, Compare, Alloc >									tree_type;
+			typedef	ft::RBTreeNode<const Key, T>												node_type;
 		public:
 			typedef Key																			key_type;
 			typedef T																			mapped_type;
@@ -98,10 +99,11 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 
 
 		private:
-			tree_type	_tree;
-			Alloc		_allocator;
-			size_type	_size;
-			key_compare	_cmp;
+			tree_type		_tree;
+			Alloc			_allocator;
+			size_type		_size;
+			key_compare		_cmp;
+			friend struct	ft::RBTree<key_type, mapped_type, key_compare, allocator_type>;
 	};
 
 	template <class Key, class T, class Compare, class Alloc>

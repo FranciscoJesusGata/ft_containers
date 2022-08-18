@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/03 00:09:25 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/17 19:07:26 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,8 +272,10 @@ namespace ft {
 	template <class T, class Cmp, class Alloc>
 	class map_iterator: public std::iterator<std::bidirectional_iterator_tag, T, Cmp> {
 		private:
-			typedef RBTreeNode<T>										node_type;
-			ft::RBTree<T, Cmp, Alloc>									*_tree;
+			typedef	typename T::first_type								key_type;
+			typedef typename T::second_type								mapped_type;
+			typedef RBTreeNode<key_type, mapped_type>					node_type;
+			ft::RBTree<key_type, mapped_type, Cmp, Alloc>				*_tree;
 			node_type													*_node;
 		public:
 			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
