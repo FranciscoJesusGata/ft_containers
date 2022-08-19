@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/18 11:59:44 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/18 13:17:49 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,20 @@ namespace ft {
 		~RBTree() { delete_tree(root); }
 
 		node_type	*insert(const value_type &item) {
-			node_type *parent = NULL;
-			node_type *new_node;
+			node_type	*parent = NULL;
+			node_type	*it = root;
+			node_type	*new_node;
 
-			if (search(root, item.first))
-				return (NULL);
+			while (it)
+			{
+				parent = it;
+				if (cmp(item.first, it->item.first))
+					it = it->left;
+				else if (cmp(it->item.first, item.first))
+					it = it->right;
+				else
+					return (NULL);
+			}
 			new_node = create_node(item);
 			new_node->parent = parent;
 			if (!parent)
@@ -62,7 +71,6 @@ namespace ft {
 		node_type	*search(node_type *node, Key &key) {
 			while (node)
 			{
-				parent = node;
 				if (cmp(node->item.first, key))
 					node = node->left;
 				else if (cmp(key, node->item.first))
