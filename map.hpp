@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/17 19:25:06 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/18 12:35:20 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,25 +64,44 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 
 			~map () {}
 
-			iterator begin() {
+			/*map					&operator= (const map& x);*/
+			
+			iterator				begin() {
 				node_type	*node = _tree->root;
 				while (node->left)
 					node = node->left;
 				return (iterator(node, &_tree));
 			}
 
-			const_iterator begin() const {
+			iterator				end() {
+				return (iterator(NULL, &_tree));
+			}
+
+			const_iterator			cbegin() const {
 				node_type	*node = _tree->root;
 				while (node->left)
 					node = node->left;
 				return (const_iterator(node, &_tree));
 			}
 
-			iterator end() {
-				return (iterator(NULL));
+			const_iterator 			cend() const {
+				return (const_iterator(NULL, &_tree));
 			}
-			const_iterator end() const {
-				return (const_iterator(NULL));
+
+			reverse_iterator		rbegin() {
+				return (reverse_iterator(end() - 1));
+			}
+
+			const_reverse_iterator	crbegin() const {
+				return (const_reverse_iterator(end() - 1));
+			}
+
+			reverse_iterator		rend() {
+				return (reverse_iterator(end()));
+			}
+
+			const_reverse_iterator	crend() {
+				return (const_reverse_iterator(cend()));
 			}
 
 			bool empty() const {
