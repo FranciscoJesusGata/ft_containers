@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/25 19:56:16 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:07:18 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,11 +277,11 @@ namespace ft {
 			tree_type													*_tree;
 			node_type													*_node;
 		public:
-			typedef typename ft::iterator_traits<node_type*>::difference_type	difference_type;
-			typedef typename ft::iterator_traits<node_type*>::value_type		value_type;
-			typedef typename ft::iterator_traits<node_type*>::pointer			pointer;
-			typedef typename ft::iterator_traits<node_type*>::reference			reference;
-			typedef typename ft::iterator_traits<node_type*>::iterator_category	random_access_iterator_tag;
+			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<T*>::value_type		value_type;
+			typedef typename ft::iterator_traits<T*>::pointer			pointer;
+			typedef typename ft::iterator_traits<T*>::reference			reference;
+			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
 
 			map_iterator(): _node(NULL) {}
 			map_iterator(node_type *src): _node(src) {}
@@ -289,7 +289,7 @@ namespace ft {
 			template <class U> map_iterator(map_iterator<U, Cmp, KeyCmp, Alloc> const &src): _node(&(*src._node)) {}
 			~map_iterator() {}
 
-			pointer			getPointer() const {
+			node_type		*getPointer() const {
 				return (_node);
 			}
 			map_iterator	&operator=(map_iterator const &rhs) {
@@ -309,19 +309,19 @@ namespace ft {
 			}
 
 			reference		operator*() {
-				return (*this->_pointer);
+				return (this->_node->item);
 			}
 
 			reference		operator*() const {
-				return (*this->_pointer);
+				return (this->_node->item);
 			}
 
 			pointer		operator->() {
-				return (this->_pointer);
+				return (&this->_node->item);
 			}
 
 			pointer		operator->() const {
-				return (this->_pointer);
+				return (&this->_node->item);
 			}
 
 			map_iterator	&operator++() {
