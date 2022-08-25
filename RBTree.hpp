@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/18 13:17:49 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/25 19:48:32 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,33 @@ namespace ft {
 	enum	e_color {BLACK, RED};
 	enum	e_dir {LEFT, RIGHT};
 
-	template <class Key, class T>
+	template <class T>
 	struct RBTreeNode
 	{
 		struct RBTreeNode	*parent;
 		struct RBTreeNode	*left;
 		struct RBTreeNode	*right;
 		e_color				color;
-		ft::pair<Key, T>	item;
+		T					item;
+
+		RBTreeNode (): left(NULL), right(NULL), color(RED), item() {}
+		RBTreeNode (const T &item): left(NULL), right(NULL), color(RED), item(item) {}
+		~RBTreeNode () {}
 	};
 
-	template <class Key, class T, class Compare, class Alloc>
+	template < class T, class Compare, class KeyComp, class Alloc>
 	struct RBTree
 	{
-		typedef RBTreeNode<Key, T>							node_type;
-		typedef	ft::pair<Key,T>								value_type;
+		typedef RBTreeNode<T>								node_type;
+		typedef	T											value_type;
 		node_type											*root;
 		Compare												cmp;
 		typename Alloc::template rebind<node_type>::other	node_allocator;
 
-		RBTree(const Alloc &alloc = Alloc(), const Compare &comp = Compare()): root(NULL), cmp(comp), node_allocator(alloc) {}
+		RBTree(const Alloc &alloc = Alloc(), const Compare &comp = Compare(KeyComp())): root(NULL), cmp(comp), node_allocator(alloc) {}
 		~RBTree() { delete_tree(root); }
 
-		node_type	*insert(const value_type &item) {
+		ft::pair<node_type*,bool>	insert(const value_type &item) {
 			node_type	*parent = NULL;
 			node_type	*it = root;
 			node_type	*new_node;
@@ -49,31 +53,33 @@ namespace ft {
 			while (it)
 			{
 				parent = it;
-				if (cmp(item.first, it->item.first))
+				if (cmp(item, it->item))
 					it = it->left;
-				else if (cmp(it->item.first, item.first))
+				else if (cmp(it->item, item))
 					it = it->right;
 				else
-					return (NULL);
+					return (ft::make_pair<node_type*,bool>(it, false));
 			}
 			new_node = create_node(item);
 			new_node->parent = parent;
 			if (!parent)
 				root = new_node;
-			else if (cmp(new_node->item.first, parent->item.first))
+			else if (cmp(new_node->item, parent->item))
 				parent->left = new_node;
 			else
 				parent->right = new_node;
 			insert_fixup(new_node);
-			return (new_node);
+			return (ft::make_pair<node_type*,bool>(new_node,true));
 		}
 
-		node_type	*search(node_type *node, Key &key) {
+		node_type	*search(const T &item) {
+			node_type	*node = root;
+			
 			while (node)
 			{
-				if (cmp(node->item.first, key))
+				if (cmp(node->item, item))
 					node = node->left;
-				else if (cmp(key, node->item.first))
+				else if (cmp(item, node->item))
 					node = node->right;
 				else
 					break ;
@@ -144,12 +150,9 @@ namespace ft {
 		
 		node_type	*create_node(const value_type &item) {
 			node_type *node;
-		
+
 			node = node_allocator.allocate(sizeof(node_type));
-			node->item = item;
-			node->color = RED;
-			node->left = NULL;
-			node->right = NULL;
+			node_allocator.construct(node, node_type(item));
 			return (node);
 		}
 
@@ -175,14 +178,14 @@ namespace ft {
 		}
 	};
 
-	template <class Key, class T>
-	void	print_node(RBTreeNode<Key, T> *tree) {	
+	template <class T>
+	void	print_node(RBTreeNode<T> *tree) {	
 		std::cout << "[ "<< (tree->color ? "RED" : "BLACK") << " ]";
 		std::cout << ": [" << tree->item.first << " => " << tree->item.second << "]" << std::endl;
 	}
 
-	template <class Key, class T>
-	void	in_order_mapi(RBTreeNode<Key, T> *tree, void (*f)(RBTreeNode<Key, T> *)) {
+	template <class T>
+	void	in_order_mapi(RBTreeNode<T> *tree, void (*f)(RBTreeNode<T> *)) {
 		if (tree)
 		{
 			in_order_mapi(tree->left, f);
@@ -191,8 +194,8 @@ namespace ft {
 		}
 	}
 
-	template <class Key, class T>
-	void	pre_order_mapi(RBTreeNode<Key, T> *tree, void (*f)(RBTreeNode<Key, T> *)) {
+	template <class T>
+	void	pre_order_mapi(RBTreeNode<T> *tree, void (*f)(RBTreeNode<T> *)) {
 		if (tree)
 		{
 			f(tree);
