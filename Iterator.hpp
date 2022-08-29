@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/25 20:07:18 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/29 12:29:19 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,25 @@ namespace ft {
 			typedef typename ft::iterator_traits<It>::iterator_category	random_access_iterator_tag;
 
 			reverse_iterator(): _base() {}
-			explicit reverse_iterator(iterator_type it): _base(it) {}
+			reverse_iterator(iterator_type const &it): _base(it) {--_base;}
 			template <class Iter>
-			reverse_iterator(const reverse_iterator<Iter>& rev_it) { _base = rev_it.base(); }
+			reverse_iterator(const reverse_iterator<Iter>& rev_it) { _base = --rev_it.base(); }
 
-			iterator_type		base() const { return (_base); }
+			iterator_type		base() const { return (++iterator_type(_base)); }
+			iterator_type		getIterator() const {return (_base); }
 			//dereference operators
-			reference				operator*() const { return (*(_base - 1)); }
-			reference				operator[](difference_type n) const { return (_base[-n-1]); }
-			pointer					operator->() const { return &(operator*()); }
+			reference				operator*() const { return (*(_base)); }
+			reference				operator[](difference_type n) const { return (_base[-n]); }
+			pointer					operator->() const { return (&(*_base)); }
 			//arithmetic operators
-			reverse_iterator		operator+(difference_type n) const { return (reverse_iterator(_base - n)); }
-			reverse_iterator		operator-(difference_type n) const { return (reverse_iterator(_base + n)); }
+			reverse_iterator		operator+(difference_type n) const { return (reverse_iterator(_base - n + 1)); }
+			reverse_iterator		operator-(difference_type n) const { return (reverse_iterator(_base + n + 1)); }
 			friend reverse_iterator	operator+(difference_type n, reverse_iterator &rhs) { return (rhs + n); }
 			friend reverse_iterator	operator-(difference_type n, reverse_iterator &rhs) { return (rhs - n); }
 			template <class Iter>
-			difference_type			operator+(reverse_iterator<Iter> &rhs) { return (_base + rhs.base()); }
+			difference_type			operator+(reverse_iterator<Iter> &rhs) { return (_base + rhs.base() + 1); }
 			template <class Iter>
-			difference_type			operator-(reverse_iterator<Iter> &rhs) { return (-(_base - rhs.base())); }
+			difference_type			operator-(reverse_iterator<Iter> &rhs) { return (-(_base - rhs.base() + 1)); }
 			reverse_iterator		&operator++() {
 				--_base;
 				return (*this);
@@ -76,31 +77,31 @@ namespace ft {
 
 			template <class Iter>
 			bool			operator==(reverse_iterator<Iter> const& lhs) const {
-				return (_base == lhs.base());
+				return (_base == lhs.getIterator());
 			}
 			template <class Iter>
 			bool			operator!=(reverse_iterator<Iter> const& lhs) const {
-				return (_base != lhs.base());
+				return (_base != lhs.getIterator());
 			}
 
 			template <class Iter>
 			bool			operator<(reverse_iterator<Iter> const& lhs) const {
-				return (_base > lhs.base());
+				return (_base > lhs.getIterator());
 			}
 
 			template <class Iter>
 			bool			operator>(reverse_iterator<Iter> const& lhs) const {
-				return (_base < lhs.base());
+				return (_base < lhs.getIterator());
 			}
 
 			template <class Iter>
 			bool			operator<=(reverse_iterator<Iter> const& lhs) const {
-				return (_base >= lhs.base());
+				return (_base >= lhs.getIterator());
 			}
 
 			template <class Iter>
 			bool			operator>=(reverse_iterator<Iter> const& lhs) const {
-				return (_base <= lhs.base());
+				return (_base <= lhs.getIterator());
 			}
 
 		private:
@@ -274,8 +275,8 @@ namespace ft {
 		private:
 			typedef ft::RBTreeNode<T>									node_type;
 			typedef ft::RBTree<T, Cmp, KeyCmp, Alloc>					tree_type;
-			tree_type													*_tree;
 			node_type													*_node;
+			tree_type													*_tree;
 		public:
 			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
 			typedef typename ft::iterator_traits<T*>::value_type		value_type;
@@ -283,14 +284,18 @@ namespace ft {
 			typedef typename ft::iterator_traits<T*>::reference			reference;
 			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
 
-			map_iterator(): _node(NULL) {}
-			map_iterator(node_type *src): _node(src) {}
-			map_iterator(map_iterator const &src): _node(src.getPointer()) {}
-			template <class U> map_iterator(map_iterator<U, Cmp, KeyCmp, Alloc> const &src): _node(&(*src._node)) {}
+			map_iterator(tree_type *src_tree): _node(NULL), _tree(src_tree) {}
+			map_iterator(node_type *src, tree_type *src_tree): _node(src), _tree(src_tree) {}
+			map_iterator(map_iterator const &src): _node(src.getNode()), _tree(src.getTree()) {}
+			template <class U> map_iterator(map_iterator<U, Cmp, KeyCmp, Alloc> const &src): _node(src.getNode()), _tree(src.getTree()) {}
 			~map_iterator() {}
 
-			node_type		*getPointer() const {
+			node_type		*getNode() const {
 				return (_node);
+			}
+
+			tree_type		*getTree() const {
+				return (_tree);
 			}
 			map_iterator	&operator=(map_iterator const &rhs) {
 				if (rhs._node != this->_node)
@@ -300,7 +305,7 @@ namespace ft {
 
 			template <class U>
 			bool			operator==(map_iterator<U, Cmp, KeyCmp, Alloc> const& rhs) const {
-				return (this->_pointer == rhs.getPointer());
+				return (this->_node == rhs.getNode());
 			}
 
 			template <class U>
