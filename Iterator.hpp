@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/29 12:29:19 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/29 21:32:23 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,7 @@ namespace ft {
 				}
 				else {
 					_node = _tree->root;
-					while (_node)
+					while (_node->right)
 						_node = _node->right;
 				}
 				return (*this);

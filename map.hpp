@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/25 19:25:54 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/08/29 21:42:58 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,12 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			typedef size_t																					size_type;
 
 			explicit map (const key_compare& comp = key_compare(),
-              const allocator_type& alloc = allocator_type()): _tree(), _allocator(alloc), _size(0), _cmp(comp) {}
+              const allocator_type& alloc = allocator_type()): _tree(), _allocator(alloc), _size(0), _cmp(comp), _item_cmp(_cmp) {}
 
 			template <class InputIterator>
 			map (InputIterator first, InputIterator last,
 				const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type()): _tree(), _allocator(alloc), _size(0), _cmp(comp)
+				const allocator_type& alloc = allocator_type()): _tree(), _allocator(alloc), _size(0), _cmp(comp), _item_cmp(_cmp)
 			{
 				for (;first != last;first++) {
 					_tree.insert(*first);
@@ -76,7 +76,7 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			/*map					&operator= (const map& x);*/
 			
 			iterator				begin() {
-				node_type	*node = _tree->root;
+				node_type	*node = _tree.root;
 				while (node->left)
 					node = node->left;
 				return (iterator(node, &_tree));
@@ -87,7 +87,7 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			}
 
 			const_iterator			cbegin() const {
-				node_type	*node = _tree->root;
+				node_type	*node = _tree.root;
 				while (node->left)
 					node = node->left;
 				return (const_iterator(node, &_tree));
@@ -98,19 +98,19 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			}
 
 			reverse_iterator		rbegin() {
-				return (reverse_iterator(end() - 1));
-			}
-
-			const_reverse_iterator	crbegin() const {
-				return (const_reverse_iterator(end() - 1));
-			}
-
-			reverse_iterator		rend() {
 				return (reverse_iterator(end()));
 			}
 
-			const_reverse_iterator	crend() {
+			const_reverse_iterator	crbegin() const {
 				return (const_reverse_iterator(cend()));
+			}
+
+			reverse_iterator		rend() {
+				return (reverse_iterator(begin()));
+			}
+
+			const_reverse_iterator	crend() {
+				return (const_reverse_iterator(cbegin()));
 			}
 
 			bool					empty() const {
@@ -148,10 +148,24 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			ft::pair<iterator,bool>	insert(const value_type& val)
 			{
 				ft::pair<node_type*,bool> item = _tree.insert(val);
-				return (ft::make_pair<iterator, bool>(iterator(item.first), item.second));
+				if (item.second)
+					_size++;
+				return (ft::make_pair<iterator, bool>(iterator(item.first, &_tree), item.second));
 			}
 
-			iterator				insert(iterator position, const value_type& val);
+			iterator				insert(iterator position, const value_type& val)
+			{
+				reverse_iterator	start(position);
+
+				for (reverse_iterator finish = rend();start != finish;++start) {
+					if (!_item_cmp(*start.base(), *position)) {
+						if (!_item_cmp(*position, *start.base()))
+							return (start.base());
+						break ;
+					}
+				}
+				return (iterator(_tree.insert(val, start.base().getNode()).first, &_tree));
+			}
 
 			template <class InputIterator>
 			void insert (InputIterator first, InputIterator last);
@@ -164,6 +178,7 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			Alloc																		_allocator;
 			size_type																	_size;
 			key_compare																	_cmp;
+			value_compare																_item_cmp;
 			friend struct																ft::RBTree<value_type, value_compare, key_compare, allocator_type>;
 	};
 };
