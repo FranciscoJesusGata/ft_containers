@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/29 21:42:58 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/01 19:09:06 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,23 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 				const key_compare& comp = key_compare(),
 				const allocator_type& alloc = allocator_type()): _tree(), _allocator(alloc), _size(0), _cmp(comp), _item_cmp(_cmp)
 			{
-				for (;first != last;first++) {
-					_tree.insert(*first);
-					_size++;
-				}
+				insert(first, last);
 			}
 
-			/*map (const map& x) {
+			map (const map& x): _tree(x._tree), _allocator(x._allocator), _size(0), _cmp(x._cmp), _item_cmp(x._item_cmp) {
 				if (*this != x)
 					*this = x;
 				return (*this);
-			}*/
+			}
 
 			~map () {}
 
-			/*map					&operator= (const map& x);*/
-			
+			/*
+			map					&operator= (const map& x)
+			{
+				
+			}
+			*/
 			iterator				begin() {
 				node_type	*node = _tree.root;
 				while (node->left)
@@ -155,21 +156,35 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 
 			iterator				insert(iterator position, const value_type& val)
 			{
-				reverse_iterator	start(position);
+				node_type	*hint = position.getNode();
+				ft::pair<node_type*, bool> inserted;
 
-				for (reverse_iterator finish = rend();start != finish;++start) {
-					if (!_item_cmp(*start.base(), *position)) {
-						if (!_item_cmp(*position, *start.base()))
-							return (start.base());
-						break ;
-					}
+				if (!hint || position.getTree() != &_tree)
+					return (insert(val).first);
+				for (node_type *p = hint->parent ; p ; p = p->parent) {
+					if (_item_cmp(p->item, p->parent->item) != _item_cmp(val, p->parent->item))
+						return (insert(val).first);
 				}
-				return (iterator(_tree.insert(val, start.base().getNode()).first, &_tree));
+				inserted = _tree.insert(val, hint);
+				if (inserted.second)
+					_size++;
+				return (iterator(inserted.first, &_tree));
 			}
 
 			template <class InputIterator>
-			void insert (InputIterator first, InputIterator last);
+			void insert (InputIterator first, InputIterator last) {
+				ft::pair<iterator,bool> inserted;
+				for (; first != last ; first++) {
+					inserted = insert(*first);
+				}
+			}
+			/*
+			void erase (iterator position);
 
+			size_type erase (const key_type& k);
+
+			void erase (iterator first, iterator last);
+			*/
 
 		private:
 			typedef ft::RBTree<value_type, value_compare, key_compare, allocator_type >	tree_type;
