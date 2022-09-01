@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/29 21:32:23 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/01 18:40:18 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ namespace ft {
 			typedef typename ft::iterator_traits<T*>::reference			reference;
 			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
 
+			map_iterator(): _node(NULL), _tree(NULL) {}
 			map_iterator(tree_type *src_tree): _node(NULL), _tree(src_tree) {}
 			map_iterator(node_type *src, tree_type *src_tree): _node(src), _tree(src_tree) {}
 			map_iterator(map_iterator const &src): _node(src.getNode()), _tree(src.getTree()) {}
@@ -297,7 +298,10 @@ namespace ft {
 			tree_type		*getTree() const {
 				return (_tree);
 			}
+
 			map_iterator	&operator=(map_iterator const &rhs) {
+				if (rhs._tree != this->_tree)
+					this->_tree = rhs._tree;
 				if (rhs._node != this->_node)
 					this->_node = rhs._node;
 				return (*this);
@@ -379,7 +383,7 @@ namespace ft {
 
 			map_iterator	operator--(int) {
 				map_iterator	temp(*this);
-				--this->_pointer;
+				--(*this);
 				return (temp);
 			}
 	};
