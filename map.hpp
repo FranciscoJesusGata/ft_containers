@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/05 21:52:00 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/05 21:59:16 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,21 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			value_compare value_comp() const
 			{
 				return (value_compare(_cmp));
+			}
+
+			iterator find (const key_type& k) {
+				return (iterator(_tree.search(make_pair(k,mapped_type())), &_tree));
+			}
+
+			const_iterator find (const key_type& k) const {
+				return (const_iterator(_tree.search(make_pair(k,mapped_type())), &_tree));
+			}
+
+			size_type count (const key_type& k) const
+			{
+				if (_tree.search(make_pair(k,mapped_type())))
+					return (1);
+				return (0);
 			}
 
 		private:
