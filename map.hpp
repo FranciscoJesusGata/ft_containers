@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/01 19:09:06 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/05 18:58:38 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,24 +148,15 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 
 			ft::pair<iterator,bool>	insert(const value_type& val)
 			{
-				ft::pair<node_type*,bool> item = _tree.insert(val);
-				if (item.second)
+				ft::pair<node_type*,bool> inserted = _tree.insert(val);
+				if (inserted.second)
 					_size++;
-				return (ft::make_pair<iterator, bool>(iterator(item.first, &_tree), item.second));
+				return (ft::make_pair<iterator, bool>(iterator(inserted.first, &_tree), inserted.second));
 			}
 
 			iterator				insert(iterator position, const value_type& val)
 			{
-				node_type	*hint = position.getNode();
-				ft::pair<node_type*, bool> inserted;
-
-				if (!hint || position.getTree() != &_tree)
-					return (insert(val).first);
-				for (node_type *p = hint->parent ; p ; p = p->parent) {
-					if (_item_cmp(p->item, p->parent->item) != _item_cmp(val, p->parent->item))
-						return (insert(val).first);
-				}
-				inserted = _tree.insert(val, hint);
+				ft::pair<node_type*, bool> inserted = _tree.insert(val, position.getNode());
 				if (inserted.second)
 					_size++;
 				return (iterator(inserted.first, &_tree));
@@ -184,7 +175,15 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			size_type erase (const key_type& k);
 
 			void erase (iterator first, iterator last);
-			*/
+			*/ //I don't wanna face the delete valancing now I'm just postponing the inevitable here :')
+
+			void swap (map& x)
+			{
+				size_type aux_size = x._size;
+				x._size = _size;
+				_size = aux_size;
+				_tree.swap(x._tree);
+			}
 
 		private:
 			typedef ft::RBTree<value_type, value_compare, key_compare, allocator_type >	tree_type;
