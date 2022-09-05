@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/05 21:25:16 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/05 21:34:45 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,10 @@ namespace ft {
 			root = aux;
 		}
 
+		void	clear(void) {
+			delete_tree(root);
+		}
+
 		private:
 
 		void	insert_fixup(node_type *new_node)
@@ -174,23 +178,21 @@ namespace ft {
 			node_allocator.deallocate(&node, sizeof(node_type));
 		}
 
-
-		void	delete_tree(node_type *tree) {
+		void		delete_tree(node_type *tree) {
 			if (tree)
 			{
 				delete_tree(tree->left);
 				delete_tree(tree->right);
-				node_allocator.destroy(tree);
-				node_allocator.deallocate(tree, sizeof(node_type));
+				destroy_node(tree);
 				tree = NULL;
 			}
 		}
 
-		void	max_size() {
+		void		max_size() {
 			return (node_allocator.max_size());
 		}
 
-		bool	hint_checker(const value_type &item, node_type *start)
+		bool		hint_checker(const value_type &item, node_type *start)
 		{
 			if (!start)
 					return (false);
