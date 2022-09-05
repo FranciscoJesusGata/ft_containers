@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/08/25 20:26:53 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/05 21:25:16 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ namespace ft {
 			node_type	*parent = NULL;
 			node_type	*new_node;
 
+			if (start != root && !(hint_checker(item, start)))
+				start = root;
 			while (start)
 			{
 				parent = start;
@@ -81,9 +83,9 @@ namespace ft {
 			while (node)
 			{
 				if (cmp(node->item, item))
-					node = node->left;
-				else if (cmp(item, node->item))
 					node = node->right;
+				else if (cmp(item, node->item))
+					node = node->left;
 				else
 					break ;
 			}
@@ -110,6 +112,14 @@ namespace ft {
 			else
 				root = son;
 			return (son);
+		}
+
+		void	swap(RBTree	&lhs) {
+			node_type *aux;
+
+			aux = lhs.root;
+			lhs.root = root;
+			root = aux;
 		}
 
 		private:
@@ -178,6 +188,19 @@ namespace ft {
 
 		void	max_size() {
 			return (node_allocator.max_size());
+		}
+
+		bool	hint_checker(const value_type &item, node_type *start)
+		{
+			if (!start)
+					return (false);
+			for (node_type *p = start->parent ; p ; p = p->parent) {
+				if (cmp(p->item, p->parent->item) != cmp(item, p->parent->item)
+					|| (!p->parent && p->parent != root)) {
+					return (false);
+				}
+			}
+			return (true);
 		}
 	};
 
