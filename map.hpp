@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/05 21:45:05 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/05 21:52:00 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,16 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			{
 				_tree.clear();
 				_size = 0;
+			}
+
+			key_compare key_comp() const
+			{
+				return (key_compare());
+			}
+
+			value_compare value_comp() const
+			{
+				return (value_compare(_cmp));
 			}
 
 		private:
