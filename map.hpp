@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/05 18:58:38 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/05 21:34:59 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			}
 
 			template <class InputIterator>
-			void insert (InputIterator first, InputIterator last) {
+			void					insert (InputIterator first, InputIterator last) {
 				ft::pair<iterator,bool> inserted;
 				for (; first != last ; first++) {
 					inserted = insert(*first);
@@ -177,12 +177,18 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			void erase (iterator first, iterator last);
 			*/ //I don't wanna face the delete valancing now I'm just postponing the inevitable here :')
 
-			void swap (map& x)
+			void					swap (map& x)
 			{
 				size_type aux_size = x._size;
 				x._size = _size;
 				_size = aux_size;
 				_tree.swap(x._tree);
+			}
+
+			void					clear (void)
+			{
+				_tree.clear();
+				_size = 0;
 			}
 
 		private:
