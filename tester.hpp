@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   tester.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/06 17:46:24 by fgata-va         ###   ########.fr       */
+/*   Created: 2022/09/06 17:41:06 by fgata-va          #+#    #+#             */
+/*   Updated: 2022/09/06 17:46:16 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <tester.hpp>
+#ifndef TESTER_HPP
+# define TESTER_HPP
+# ifdef STD //CREATE A REAL STL EXAMPLE
+	#include <vector>
+	#include <map>
+	namespace ft = std;
+# else
+	#include <vector.hpp>
+	#include <map.hpp>
+# endif
+# include <iostream>
+# include <string>
+# include <exception>
 
-int	main(int argc, char **argv) {
-	argc++; argc--;
-	test_vector();
-	test_map();
-	system((std::string("leaks -q ") += argv[0] + 2).c_str());
-	std::cout << std::endl;
-}
+void	test_vector(void);
+void	test_map(void);
+#endif
