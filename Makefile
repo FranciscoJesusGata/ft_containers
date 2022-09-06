@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+         #
+#    By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/26 12:07:26 by fgata-va          #+#    #+#              #
-#    Updated: 2022/05/25 19:51:52 by fgata-va         ###   ########.fr        #
+#    Updated: 2022/09/06 17:47:04 by fgata-va         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC := main.cpp
+SRC := main.cpp test_vector.cpp test_map.cpp
 
 CXX := c++
 
@@ -26,7 +26,10 @@ ft_$(NAME):
 std_$(NAME):
 	$(CXX) $(CXXFLAGS) -DSTD $(SRC) -o std_$(NAME)
 
+rbtree: fclean
+	$(CXX) $(CXXFLAGS) test_rbtree.cpp -o rbtree
+
 fclean:
-	rm -rf ft_$(NAME)* std_$(NAME)*
+	rm -rf ft_$(NAME)* std_$(NAME)* rbtree rbtree.dSYM
 
 re: fclean all
