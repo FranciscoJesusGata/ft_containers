@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/05 21:34:45 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/06 20:34:55 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ namespace ft {
 			return (ft::make_pair<node_type*,bool>(new_node,true));
 		}
 
-		node_type	*search(const T &item) {
+		node_type	*search(const T &item) const {
 			node_type	*node = root;
 			
 			while (node)
@@ -124,6 +124,10 @@ namespace ft {
 
 		void	clear(void) {
 			delete_tree(root);
+		}
+
+		size_t		max_size(void) const {
+			return (node_allocator.max_size());
 		}
 
 		private:
@@ -174,8 +178,8 @@ namespace ft {
 		}
 
 		void		destroy_node(node_type *node) {
-			node_allocator.destroy(&node);
-			node_allocator.deallocate(&node, sizeof(node_type));
+			node_allocator.destroy(node);
+			node_allocator.deallocate(node, sizeof(node_type));
 		}
 
 		void		delete_tree(node_type *tree) {
@@ -188,11 +192,7 @@ namespace ft {
 			}
 		}
 
-		void		max_size() {
-			return (node_allocator.max_size());
-		}
-
-		bool		hint_checker(const value_type &item, node_type *start)
+		bool		hint_checker(const value_type &item, node_type *start) const
 		{
 			if (!start)
 					return (false);
