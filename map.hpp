@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/05 21:59:16 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/06 21:18:44 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,17 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 						return comp(x.first, y.first);
 					}
 			};
-			typedef Alloc																					allocator_type;
-			typedef typename allocator_type::reference														reference;
-			typedef typename allocator_type::const_reference												const_reference;
-			typedef typename allocator_type::pointer														pointer;
-			typedef typename allocator_type::const_pointer													const_pointer;
-			typedef typename ft::map_iterator<value_type, value_compare, key_compare, allocator_type>		iterator;
-			typedef typename ft::map_iterator<const value_type, value_compare, key_compare, allocator_type>	const_iterator;
-			typedef typename ft::reverse_iterator<iterator>													reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator>											const_reverse_iterator;
-			typedef typename ft::iterator_traits<iterator>::difference_type									difference_type;
-			typedef size_t																					size_type;
+			typedef Alloc																						allocator_type;
+			typedef typename allocator_type::reference															reference;
+			typedef typename allocator_type::const_reference													const_reference;
+			typedef typename allocator_type::pointer															pointer;
+			typedef typename allocator_type::const_pointer														const_pointer;
+			typedef typename ft::map_iterator<value_type, value_compare, key_compare, allocator_type, false>	iterator;
+			typedef typename ft::map_iterator<value_type, value_compare, key_compare, allocator_type, true>		const_iterator;
+			typedef typename ft::reverse_iterator<iterator>														reverse_iterator;
+			typedef typename ft::reverse_iterator<const_iterator>												const_reverse_iterator;
+			typedef typename ft::iterator_traits<iterator>::difference_type										difference_type;
+			typedef size_t																						size_type;
 
 			explicit map (const key_compare& comp = key_compare(),
               const allocator_type& alloc = allocator_type()): _tree(), _allocator(alloc), _size(0), _cmp(comp), _item_cmp(_cmp) {}
@@ -83,16 +83,35 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 				return (iterator(node, &_tree));
 			}
 
+			const_iterator			begin() const {
+				node_type	*node = _tree.root;
+				while (node->left)
+					node = node->left;
+				return (const_iterator(node, &_tree));
+			}
+
 			iterator				end() {
 				return (iterator(NULL, &_tree));
+			}
+
+			const_iterator			end() const {
+				return (const_iterator(NULL, &_tree));
 			}
 
 			reverse_iterator		rbegin() {
 				return (reverse_iterator(end()));
 			}
 
+			const_reverse_iterator	rbegin() const {
+				return (const_reverse_iterator(end()));
+			}
+
 			reverse_iterator		rend() {
 				return (reverse_iterator(begin()));
+			}
+
+			const_reverse_iterator	rend() const {
+				return (const_reverse_iterator(begin()));
 			}
 
 			bool					empty() const {
@@ -167,16 +186,16 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			}
 
 			iterator find (const key_type& k) {
-				return (iterator(_tree.search(make_pair(k,mapped_type())), &_tree));
+				return (iterator(_tree.search(ft::make_pair(k,mapped_type())), &_tree));
 			}
 
 			const_iterator find (const key_type& k) const {
-				return (const_iterator(_tree.search(make_pair(k,mapped_type())), &_tree));
+				return (const_iterator(_tree.search(ft::make_pair(k,mapped_type())), &_tree));
 			}
 
 			size_type count (const key_type& k) const
 			{
-				if (_tree.search(make_pair(k,mapped_type())))
+				if (this->_tree.search(ft::make_pair(k,mapped_type())))
 					return (1);
 				return (0);
 			}
@@ -189,7 +208,6 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			size_type																	_size;
 			key_compare																	_cmp;
 			value_compare																_item_cmp;
-			friend struct																ft::RBTree<value_type, value_compare, key_compare, allocator_type>;
 	};
 };
 

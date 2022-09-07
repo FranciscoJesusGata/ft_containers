@@ -6,13 +6,14 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/01 18:40:18 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/07 19:33:27 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 # include <cstddef>
+# include <type_traits.hpp>
 # include <iterator_traits.hpp>
 # include <RBTree.hpp>
 
@@ -270,25 +271,27 @@ namespace ft {
 			T*	_pointer;
 	};
 
-	template <class T, class Cmp, class KeyCmp, class Alloc>
+	template <class T, class Cmp, class KeyCmp, class Alloc, bool Const>
 	class map_iterator: public std::iterator<std::bidirectional_iterator_tag, T, Cmp> {
 		private:
-			typedef ft::RBTreeNode<T>									node_type;
-			typedef ft::RBTree<T, Cmp, KeyCmp, Alloc>					tree_type;
-			node_type													*_node;
-			tree_type													*_tree;
+			typedef typename ft::conditional<Const, const ft::RBTreeNode<T>, ft::RBTreeNode<T> >::type									node_type;
+			typedef typename ft::conditional<Const, const ft::RBTree<T, Cmp, KeyCmp, Alloc>, ft::RBTree<T, Cmp, KeyCmp, Alloc> >::type	tree_type;
+			node_type																													*_node;
+			tree_type																													*_tree;
+
 		public:
-			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
-			typedef typename ft::iterator_traits<T*>::value_type		value_type;
-			typedef typename ft::iterator_traits<T*>::pointer			pointer;
-			typedef typename ft::iterator_traits<T*>::reference			reference;
-			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
+			typedef	typename ft::conditional<Const, const T, T >::type																	value_type;
+			typedef typename ft::iterator_traits<value_type *>::difference_type															difference_type;
+			typedef typename ft::iterator_traits<value_type *>::pointer																	pointer;
+			typedef typename ft::iterator_traits<value_type *>::reference																reference;
+			typedef typename ft::iterator_traits<value_type *>::iterator_category														random_access_iterator_tag;
 
 			map_iterator(): _node(NULL), _tree(NULL) {}
-			map_iterator(tree_type *src_tree): _node(NULL), _tree(src_tree) {}
-			map_iterator(node_type *src, tree_type *src_tree): _node(src), _tree(src_tree) {}
+			map_iterator(tree_type * const src_tree): _node(NULL), _tree(src_tree) {}
+			map_iterator(node_type * const src, tree_type * const src_tree): _node(src), _tree(src_tree) {}
 			map_iterator(map_iterator const &src): _node(src.getNode()), _tree(src.getTree()) {}
-			template <class U> map_iterator(map_iterator<U, Cmp, KeyCmp, Alloc> const &src): _node(src.getNode()), _tree(src.getTree()) {}
+			template <bool B>
+			map_iterator(map_iterator<T, Cmp, KeyCmp, Alloc, B> const &src, typename ft::enable_if<!B>::type* = 0): _node(src.getNode()), _tree(src.getTree()) {}
 			~map_iterator() {}
 
 			node_type		*getNode() const {
@@ -307,13 +310,13 @@ namespace ft {
 				return (*this);
 			}
 
-			template <class U>
-			bool			operator==(map_iterator<U, Cmp, KeyCmp, Alloc> const& rhs) const {
+			template <bool B>
+			bool			operator==(map_iterator<T, Cmp, KeyCmp, Alloc, B> const& rhs) const {
 				return (this->_node == rhs.getNode());
 			}
 
-			template <class U>
-			bool			operator!=(map_iterator<U, Cmp, KeyCmp, Alloc> const& rhs) const {
+			template <bool B>
+			bool			operator!=(map_iterator<T, Cmp, KeyCmp, Alloc, B> const& rhs) const {
 				return (!(*this == rhs));
 			}
 
