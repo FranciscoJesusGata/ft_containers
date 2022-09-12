@@ -6,13 +6,13 @@
 #    By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/26 12:07:26 by fgata-va          #+#    #+#              #
-#    Updated: 2022/09/06 17:47:04 by fgata-va         ###   ########.fr        #
+#    Updated: 2022/09/09 15:00:51 by fgata-va         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC := main.cpp test_vector.cpp test_map.cpp
 
-CXX := c++
+CXX := clang++
 
 CXXFLAGS := -Wall -Werror -Wextra -std=c++98 -I. -g
 
