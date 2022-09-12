@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/06 20:34:55 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/12 16:49:19 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ namespace ft {
 
 		void	clear(void) {
 			delete_tree(root);
+			root = NULL;
 		}
 
 		size_t		max_size(void) const {

@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/06 21:18:44 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/12 16:49:14 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <iterator_traits.hpp>
 # include <RBTree.hpp>
 # include <Iterator.hpp>
+# include <algorithm.hpp>
 
 namespace ft {
 template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > > 
@@ -62,30 +63,32 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 				insert(first, last);
 			}
 
-			map (const map& x): _tree(x._tree), _allocator(x._allocator), _size(0), _cmp(x._cmp), _item_cmp(x._item_cmp) {
-				if (*this != x)
-					*this = x;
-				return (*this);
+			map (const map& x): _tree(), _allocator(x._allocator), _size(0), _cmp(x._cmp), _item_cmp(x._item_cmp) {
+				*this = x;
 			}
 
 			~map () {}
 
-			/*
 			map					&operator= (const map& x)
 			{
-				
+				if (*this != x) {
+					clear();
+					insert(x.begin(), x.end());
+					_size = x.size();
+				}
+				return (*this);
 			}
-			*/
+
 			iterator				begin() {
 				node_type	*node = _tree.root;
-				while (node->left)
+				while (node && node->left)
 					node = node->left;
 				return (iterator(node, &_tree));
 			}
 
 			const_iterator			begin() const {
 				node_type	*node = _tree.root;
-				while (node->left)
+				while (node && node->left)
 					node = node->left;
 				return (const_iterator(node, &_tree));
 			}
@@ -209,6 +212,56 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			key_compare																	_cmp;
 			value_compare																_item_cmp;
 	};
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator== ( const map<Key,T,Compare,Alloc>& lhs,
+						const map<Key,T,Compare,Alloc>& rhs )
+	{
+		if (lhs.size() != rhs.size())
+			return (false);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator!= ( const map<Key,T,Compare,Alloc>& lhs,
+						const map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(lhs == rhs));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<  ( const map<Key,T,Compare,Alloc>& lhs,
+						const map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<= ( const map<Key,T,Compare,Alloc>& lhs,
+						const map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(rhs < lhs));
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>  ( const map<Key,T,Compare,Alloc>& lhs,
+						const map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (rhs < lhs);
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>= ( const map<Key,T,Compare,Alloc>& lhs,
+						const map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(lhs < rhs));
+	}
+	
+	template <class Key, class T, class Compare, class Alloc>
+	void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
+	{
+		x.swap(y);
+	}
 };
 
 #endif
