@@ -3,12 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   algorithm.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 17:43:53 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/09 19:49:50 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/13 15:42:03 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef ALGORITHM_HPP
+# define ALGORITHM_HPP
 
 namespace ft {
 
@@ -63,3 +66,4 @@ namespace ft {
 	}
 }
 
+#endif
