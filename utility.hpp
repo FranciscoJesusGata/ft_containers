@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utility.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <fgata-va@student.42madrid>       +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 15:31:55 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/05/27 15:54:43 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/13 17:46:08 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace ft {
 		first_type	first;
 		second_type	second;
 
-		pair() {}
+		pair(): first(), second() {}
 		template <class U, class V>
 		pair (const pair<U,V>& pr): first(pr.first), second(pr.second) {}
 		pair (const first_type& a, const second_type &b): first(a), second(b) {}
