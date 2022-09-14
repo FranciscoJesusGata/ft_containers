@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/12 16:49:14 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/14 17:20:23 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			typedef typename allocator_type::const_reference													const_reference;
 			typedef typename allocator_type::pointer															pointer;
 			typedef typename allocator_type::const_pointer														const_pointer;
-			typedef typename ft::map_iterator<value_type, value_compare, key_compare, allocator_type, false>	iterator;
-			typedef typename ft::map_iterator<value_type, value_compare, key_compare, allocator_type, true>		const_iterator;
+			typedef typename ft::map_iterator<value_type, false>	iterator;
+			typedef typename ft::map_iterator<value_type, true>		const_iterator;
 			typedef typename ft::reverse_iterator<iterator>														reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator>												const_reverse_iterator;
 			typedef typename ft::iterator_traits<iterator>::difference_type										difference_type;
@@ -80,25 +80,19 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			}
 
 			iterator				begin() {
-				node_type	*node = _tree.root;
-				while (node && node->left)
-					node = node->left;
-				return (iterator(node, &_tree));
+				return (iterator(_tree.min()));
 			}
 
 			const_iterator			begin() const {
-				node_type	*node = _tree.root;
-				while (node && node->left)
-					node = node->left;
-				return (const_iterator(node, &_tree));
+				return (const_iterator(_tree.min()));
 			}
 
 			iterator				end() {
-				return (iterator(NULL, &_tree));
+				return (++iterator(_tree.max()));
 			}
 
 			const_iterator			end() const {
-				return (const_iterator(NULL, &_tree));
+				return (++const_iterator(_tree.max()));
 			}
 
 			reverse_iterator		rbegin() {
@@ -138,7 +132,7 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 				ft::pair<node_type*,bool> inserted = _tree.insert(val);
 				if (inserted.second)
 					_size++;
-				return (ft::make_pair<iterator, bool>(iterator(inserted.first, &_tree), inserted.second));
+				return (ft::make_pair<iterator, bool>(iterator(inserted.first), inserted.second));
 			}
 
 			iterator				insert(iterator position, const value_type& val)
@@ -146,7 +140,7 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 				ft::pair<node_type*, bool> inserted = _tree.insert(val, position.getNode());
 				if (inserted.second)
 					_size++;
-				return (iterator(inserted.first, &_tree));
+				return (iterator(inserted.first));
 			}
 
 			template <class InputIterator>
@@ -189,16 +183,16 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 			}
 
 			iterator find (const key_type& k) {
-				return (iterator(_tree.search(ft::make_pair(k,mapped_type())), &_tree));
+				return (iterator(_tree.search(ft::make_pair(k,mapped_type()))));
 			}
 
 			const_iterator find (const key_type& k) const {
-				return (const_iterator(_tree.search(ft::make_pair(k,mapped_type())), &_tree));
+				return (const_iterator(_tree.search(ft::make_pair(k,mapped_type()))));
 			}
 
 			size_type count (const key_type& k) const
 			{
-				if (this->_tree.search(ft::make_pair(k,mapped_type())))
+				if (!this->_tree.search(ft::make_pair(k,mapped_type()))->nil)
 					return (1);
 				return (0);
 			}

@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/07 19:33:27 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/14 14:26:36 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,13 +271,11 @@ namespace ft {
 			T*	_pointer;
 	};
 
-	template <class T, class Cmp, class KeyCmp, class Alloc, bool Const>
-	class map_iterator: public std::iterator<std::bidirectional_iterator_tag, T, Cmp> {
+	template <class T, bool Const>
+	class map_iterator: public std::iterator<std::bidirectional_iterator_tag, T> {
 		private:
 			typedef typename ft::conditional<Const, const ft::RBTreeNode<T>, ft::RBTreeNode<T> >::type									node_type;
-			typedef typename ft::conditional<Const, const ft::RBTree<T, Cmp, KeyCmp, Alloc>, ft::RBTree<T, Cmp, KeyCmp, Alloc> >::type	tree_type;
 			node_type																													*_node;
-			tree_type																													*_tree;
 
 		public:
 			typedef	typename ft::conditional<Const, const T, T >::type																	value_type;
@@ -286,37 +284,29 @@ namespace ft {
 			typedef typename ft::iterator_traits<value_type *>::reference																reference;
 			typedef typename ft::iterator_traits<value_type *>::iterator_category														random_access_iterator_tag;
 
-			map_iterator(): _node(NULL), _tree(NULL) {}
-			map_iterator(tree_type * const src_tree): _node(NULL), _tree(src_tree) {}
-			map_iterator(node_type * const src, tree_type * const src_tree): _node(src), _tree(src_tree) {}
-			map_iterator(map_iterator const &src): _node(src.getNode()), _tree(src.getTree()) {}
+			map_iterator(): _node(NULL) {}
+			map_iterator(node_type * const src): _node(src) {}
 			template <bool B>
-			map_iterator(map_iterator<T, Cmp, KeyCmp, Alloc, B> const &src, typename ft::enable_if<!B>::type* = 0): _node(src.getNode()), _tree(src.getTree()) {}
+			map_iterator(map_iterator<T, B> const &src): _node(src.getNode()) {}
 			~map_iterator() {}
 
 			node_type		*getNode() const {
 				return (_node);
 			}
 
-			tree_type		*getTree() const {
-				return (_tree);
-			}
-
 			map_iterator	&operator=(map_iterator const &rhs) {
-				if (rhs._tree != this->_tree)
-					this->_tree = rhs._tree;
 				if (rhs._node != this->_node)
 					this->_node = rhs._node;
 				return (*this);
 			}
 
 			template <bool B>
-			bool			operator==(map_iterator<T, Cmp, KeyCmp, Alloc, B> const& rhs) const {
+			bool			operator==(map_iterator<T, B> const& rhs) const {
 				return (this->_node == rhs.getNode());
 			}
 
 			template <bool B>
-			bool			operator!=(map_iterator<T, Cmp, KeyCmp, Alloc, B> const& rhs) const {
+			bool			operator!=(map_iterator<T, B> const& rhs) const {
 				return (!(*this == rhs));
 			}
 
@@ -337,23 +327,20 @@ namespace ft {
 			}
 
 			map_iterator	&operator++() {
-				if (_node) {
-					if (_node->right) {
+				if (!_node->nil) {
+					if (!_node->right->nil) {
 						_node = _node->right;
-						while (_node->left)
+						while (!_node->left->nil)
 							_node = _node->left;
 					}
 					else {
-						while (_node->parent && _node == _node->parent->right)
+						while (!_node->parent->nil && _node == _node->parent->right)
 							_node = _node->parent;
 						_node = _node->parent;
 					}
 				}
-				else {
-					_node = _tree->root;
-					while (_node)
-						_node = _node->left;
-				}
+				else
+					_node = _node->left;
 				return (*this);
 			}
 
@@ -364,10 +351,10 @@ namespace ft {
 			}
 
 			map_iterator	&operator--() {
-				if (_node) {
-					if (_node->left) {
+				if (!_node->nil) {
+					if (!_node->left->nil) {
 						_node = _node->left;
-						while (_node->right)
+						while (!_node->right->nil)
 							_node = _node->right;
 					}
 					else {
@@ -376,11 +363,8 @@ namespace ft {
 						_node = _node->parent;
 					}
 				}
-				else {
-					_node = _tree->root;
-					while (_node->right)
-						_node = _node->right;
-				}
+				else
+					_node = _node->right;
 				return (*this);
 			}
 
