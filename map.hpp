@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/14 17:20:23 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/15 22:08:19 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,46 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 				if (!this->_tree.search(ft::make_pair(k,mapped_type()))->nil)
 					return (1);
 				return (0);
+			}
+
+			iterator lower_bound (const key_type& k) {
+				iterator it = begin(), finish = end();
+
+				while (it != finish && _cmp(it->first, k))
+					it++;
+				return (it);
+			}
+
+			const_iterator lower_bound (const key_type& k) const {
+				const_iterator it = begin(), finish = end();
+
+				while (it != finish && _cmp(it->first, k))
+					it++;
+				return (it);
+			}
+
+			iterator upper_bound (const key_type& k) {
+				iterator it = begin(), finish = end();
+
+				while (it != finish && !_cmp(k, it->first))
+					it++;
+				return (it);
+			}
+
+			const_iterator upper_bound (const key_type& k) const {
+				const_iterator it = begin(), finish = end();
+
+				while (it != finish && !_cmp(k, it->first))
+					it++;
+				return (it);
+			}
+
+			pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
+				return (ft::make_pair(lower_bound(k), upper_bound(k)));
+			}
+
+			pair<iterator,iterator>             equal_range (const key_type& k) {
+				return (ft::make_pair(lower_bound(k), upper_bound(k)));
 			}
 
 		private:
