@@ -59,7 +59,7 @@ void	test_map(void) {
 			break ;
 		}
 	}
-	std::cout << (rosalia.size() == rowsaleah.size()) << std::endl;
+	std::cout << (rosalia == rowsaleah) << std::endl;
 	rosalia.insert(ft::make_pair('0', "[ * t H 3 ~ ^ 0 i D * ]"));
 	rowsaleah.swap(rosalia);
 	std::cout << rosalia.size() << ' ';
@@ -68,4 +68,11 @@ void	test_map(void) {
 	else
 		std::cout << "Element not found" << std::endl;
 	std::cout << rowsaleah.size() << " " << rowsaleah['0'] << std::endl;
+	std::cout << (rosalia == rowsaleah) << std::endl;
+	ft::map<char, std::string>::iterator itlow = rosalia.lower_bound('b');
+	if (itlow != rosalia.end())
+		std::cout << "['" << (*itlow).first << "']" << " => \"" << (*itlow).second << '"' << std::endl;
+	ft::map<char, std::string>::iterator uplow = rosalia.upper_bound('d');
+	if (uplow != rosalia.end())
+		std::cout << "['" << (*uplow).first << "']" << " => \"" << (*uplow).second << '"' << std::endl;
 }

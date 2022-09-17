@@ -18,7 +18,7 @@ CXXFLAGS := -Wall -Werror -Wextra -std=c++98 -I. -g
 
 NAME := test
 
-all: std_$(NAME) ft_$(NAME)
+all: std_$(NAME) ft_$(NAME) rbtree
 
 ft_$(NAME):
 	$(CXX) $(CXXFLAGS) $(SRC) -o ft_$(NAME)
@@ -26,7 +26,7 @@ ft_$(NAME):
 std_$(NAME):
 	$(CXX) $(CXXFLAGS) -DSTD $(SRC) -o std_$(NAME)
 
-rbtree: fclean
+rbtree:
 	$(CXX) $(CXXFLAGS) test_rbtree.cpp -o rbtree
 
 fclean:
