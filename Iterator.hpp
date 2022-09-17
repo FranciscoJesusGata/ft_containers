@@ -119,10 +119,10 @@ namespace ft {
 	template <class T>
 	class vector_iterator: public std::iterator<std::random_access_iterator_tag, T> {
 		public:
-			typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
-			typedef typename ft::iterator_traits<T*>::value_type		value_type;
-			typedef typename ft::iterator_traits<T*>::pointer			pointer;
-			typedef typename ft::iterator_traits<T*>::reference			reference;
+			typedef typename ft::iterator_traits<T*>::difference_type		difference_type;
+			typedef typename ft::iterator_traits<T*>::value_type				value_type;
+			typedef typename ft::iterator_traits<T*>::pointer						pointer;
+			typedef typename ft::iterator_traits<T*>::reference					reference;
 			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
 
 			vector_iterator(): _pointer(NULL) {}
@@ -275,7 +275,7 @@ namespace ft {
 	class map_iterator: public std::iterator<std::bidirectional_iterator_tag, T> {
 		private:
 			typedef typename ft::conditional<Const, const ft::RBTreeNode<T>, ft::RBTreeNode<T> >::type									node_type;
-			node_type																													*_node;
+			node_type																																																		*_node;
 
 		public:
 			typedef	typename ft::conditional<Const, const T, T >::type																	value_type;
@@ -327,20 +327,7 @@ namespace ft {
 			}
 
 			map_iterator	&operator++() {
-				if (!_node->nil) {
-					if (!_node->right->nil) {
-						_node = _node->right;
-						while (!_node->left->nil)
-							_node = _node->left;
-					}
-					else {
-						while (!_node->parent->nil && _node == _node->parent->right)
-							_node = _node->parent;
-						_node = _node->parent;
-					}
-				}
-				else
-					_node = _node->left;
+				_node = ft::next_node<T, Const>(_node);
 				return (*this);
 			}
 
@@ -351,20 +338,7 @@ namespace ft {
 			}
 
 			map_iterator	&operator--() {
-				if (!_node->nil) {
-					if (!_node->left->nil) {
-						_node = _node->left;
-						while (!_node->right->nil)
-							_node = _node->right;
-					}
-					else {
-						while (_node->parent && _node == _node->parent->left)
-							_node = _node->parent;
-						_node = _node->parent;
-					}
-				}
-				else
-					_node = _node->right;
+				_node = ft::prev_node<T, Const>(_node);
 				return (*this);
 			}
 
