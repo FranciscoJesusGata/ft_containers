@@ -32,8 +32,6 @@ int  main(int argc, char *argv[]) {
 	rosalia.insert(ft::make_pair('b', "bandida"));
 	rosalia.insert(ft::make_pair('c', "coqueta"));
   rosalia.insert(ft::make_pair('z', "zarzamora o de zapatea'o, o de zorra también"));
-	rosalia.insert(ft::make_pair('b', "bandida"));
-	rosalia.insert(ft::make_pair('c', "coqueta"));
 	rosalia.insert(ft::make_pair('d', "dinamita"));
 	rosalia.insert(ft::make_pair('e', "expensiva, emperatriz, enigma, enterada"));
 	rosalia.insert(ft::make_pair('u', "ultrasonidos"));
@@ -56,21 +54,31 @@ int  main(int argc, char *argv[]) {
 	ft::in_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
+	//Delete u simple delete
 	rosalia.erase(ft::make_pair('u', MAPPED_TYPE()));
 	std::cout << "Deleting u:" << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::in_order_mapi(rosalia.root, ft::print_node);
-	rosalia.erase(ft::make_pair('z', MAPPED_TYPE()));
-	std::cout << "Deleting z:" << std::endl;
-	ft::pre_order_mapi(rosalia.root, ft::print_node);
-	std::cout << std::endl;
-	ft::in_order_mapi(rosalia.root, ft::print_node);
+	//Delete root simple delete
 	rosalia.erase(ft::make_pair(rosalia.root->item.first, MAPPED_TYPE()));
 	std::cout << "Deleting root:" << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::in_order_mapi(rosalia.root, ft::print_node);
+	//delete q, simple delete case with red son
+	rosalia.erase(ft::make_pair('q', MAPPED_TYPE()));
+	std::cout << "Deleting q:" << std::endl;
+	ft::pre_order_mapi(rosalia.root, ft::print_node);
+	std::cout << std::endl;
+	ft::in_order_mapi(rosalia.root, ft::print_node);
+	//delete d, delete case 1 and 4
+	rosalia.erase(ft::make_pair('d', MAPPED_TYPE()));
+	std::cout << "Deleting d:" << std::endl;
+	ft::pre_order_mapi(rosalia.root, ft::print_node);
+	std::cout << std::endl;
+	ft::in_order_mapi(rosalia.root, ft::print_node);
+
 	TREE_TYPE	lemon_tree;
 
 	lemon_tree.insert(ft::make_pair('0', " * [ d A - ^ 0 1 d ! ] * "));
