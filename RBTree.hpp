@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:48:51 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/16 18:40:22 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/20 21:50:25 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ namespace ft {
 			nil->left = nil;
 			nil->right = nil;
 			nil->parent = nil;
+			nil->color = BLACK;
 			nil->nil = true;
 			root = nil;
 		}
@@ -152,7 +153,7 @@ namespace ft {
 		}
 
 		void		erase(const T &item) {
-			node_type *node;
+			node_type	*node;
 			node_type	*sustitute;
 
 			node = search(item);
@@ -167,21 +168,18 @@ namespace ft {
 				if (node->left != nil) {
 					sustitute = prev_node<T, false>(node);
 					swap_node(node, sustitute);
-					node->color = sustitute->color;
 				}
 				else if (node->right != nil) {
 					sustitute = next_node<T, false>(node);
 					swap_node(node, sustitute);
-					node->color = sustitute->color;
 					if (root == node)
 						root = sustitute;
 				}
-				if (node == root)
-					root = nil;
+				if (node != root)
+					erase_fixup(node);
 				else
-					(node->parent->left == node ? node->parent->left : node->parent->right) = nil;
+					root = nil;
 				destroy_node(node);
-				//after the deletion we will need to rebalance the tree
 			}
 		}
 
@@ -320,6 +318,64 @@ namespace ft {
 			}
 			root->color = BLACK;
 		}
+
+		void	erase_fixup(node_type *deleted_node) {
+			node_type *parent = deleted_node->parent;
+			node_type *sibbling;
+			node_type *close_nephew;
+			node_type *distant_nephew;
+			e_dir			direction = (parent->left == deleted_node ? LEFT : RIGHT);
+
+			(parent->left == deleted_node ? parent->left : parent->right) = nil;
+			if (deleted_node->color == RED || deleted_node->left != nil || deleted_node->right != nil) {
+				if (deleted_node->left->color == RED) {
+					deleted_node->left->color = BLACK;
+					deleted_node->parent->right = deleted_node->left;
+				}
+				else if (deleted_node->right->color == RED) {
+					deleted_node->right->color = BLACK;
+					deleted_node->parent->left = deleted_node->right;
+				}
+				return ;
+			}
+			do {
+				sibbling = (1 - direction ? parent->right : parent->left);
+				distant_nephew = (1 - direction ? sibbling->right : sibbling->left);
+				close_nephew = (direction ? sibbling->right : sibbling->left);
+				if (sibbling->color == RED) { // delete case 3
+					rotate(parent, direction);
+					parent->color = RED;
+					sibbling->color = BLACK;
+					sibbling = close_nephew;
+					close_nephew = (direction ? sibbling->right : sibbling->left);
+					distant_nephew = (1 - direction ? sibbling->right : sibbling->left);
+				}
+				if (close_nephew != nil && close_nephew->color == RED) { // delete case 5
+					rotate(sibbling, 1 - direction);
+					sibbling->color = RED;
+					close_nephew->color = BLACK;
+					distant_nephew = sibbling;
+					sibbling = close_nephew;
+				}
+				if (distant_nephew != nil && distant_nephew->color == RED) { // delete case 6
+					rotate(parent, direction);
+					sibbling->color = parent->color;
+					parent->color = BLACK;
+					distant_nephew->color = BLACK;
+					return ;
+				}
+				if (parent->color == RED) { // delete case 4
+					sibbling->color = RED;
+					parent->color = BLACK;
+					return ;
+				}
+				sibbling->color = RED;
+				deleted_node = parent; 
+				parent = deleted_node->parent;
+				direction = (parent->left == deleted_node ? LEFT : RIGHT);
+			} while (parent != nil);
+
+		}
 		
 		node_type	*create_node(const value_type &item) {
 			node_type *node;
@@ -362,6 +418,7 @@ namespace ft {
 
 		void		swap_node(node_type *a, node_type *b) {
 			node_type *aux;
+			e_color		aux_color;
 
 			if (a == root)
 				root = b;
@@ -372,16 +429,22 @@ namespace ft {
 				else
 					(b == b->parent->left ? b->parent->left : b->parent->right) = a;
 			}
+			a->left->parent = b;
+			b->left->parent = a;
 			aux = a->left;
 			a->left = b->left;
 			b->left = aux;
+			a->right->parent = b;
+			b->right->parent = a;
 			aux = a->right;
 			a->right = b->right;
 			b->right = aux;
 			aux = a->parent;
 			a->parent = b->parent;
 			b->parent = aux;
-
+			aux_color = a->color;
+			a->color = b->color;
+			b->color = aux_color;
 		}
 	};
 
