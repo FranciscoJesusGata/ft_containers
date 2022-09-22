@@ -31,9 +31,10 @@ int  main(int argc, char *argv[]) {
 	rosalia.insert(ft::make_pair('a', "alfa, altura, alien"));
 	rosalia.insert(ft::make_pair('b', "bandida"));
 	rosalia.insert(ft::make_pair('c', "coqueta"));
-  rosalia.insert(ft::make_pair('z', "zarzamora o de zapatea'o, o de zorra también"));
+	rosalia.insert(ft::make_pair('z', "zarzamora o de zapatea'o, o de zorra también"));
 	rosalia.insert(ft::make_pair('d', "dinamita"));
 	rosalia.insert(ft::make_pair('e', "expensiva, emperatriz, enigma, enterada"));
+	rosalia.insert(ft::make_pair('n', "ni se te ocurra ni pensarlo"));
 	rosalia.insert(ft::make_pair('u', "ultrasonidos"));
 	rosalia.insert(ft::make_pair('s', "sata"));
 	rosalia.insert(ft::make_pair('f', "Flux Æon"));
@@ -60,7 +61,7 @@ int  main(int argc, char *argv[]) {
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::in_order_mapi(rosalia.root, ft::print_node);
-	//Delete root simple delete
+	//Delete root delete case 1 and 4
 	rosalia.erase(ft::make_pair(rosalia.root->item.first, MAPPED_TYPE()));
 	std::cout << "Deleting root:" << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
@@ -72,18 +73,29 @@ int  main(int argc, char *argv[]) {
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::in_order_mapi(rosalia.root, ft::print_node);
-	//delete d, delete case 1 and 4
+	//delete d, delete case 4
 	rosalia.erase(ft::make_pair('d', MAPPED_TYPE()));
 	std::cout << "Deleting d:" << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::in_order_mapi(rosalia.root, ft::print_node);
-
+	//delete p, delete case 6
+	rosalia.erase(ft::make_pair('p', MAPPED_TYPE()));
+	std::cout << "Deleting p:" << std::endl;
+	ft::pre_order_mapi(rosalia.root, ft::print_node);
+	std::cout << std::endl;
+	ft::in_order_mapi(rosalia.root, ft::print_node);
+	//delete i, delete case 5 and 6
+	rosalia.erase(ft::make_pair('i', MAPPED_TYPE()));
+	std::cout << "Deleting i:" << std::endl;
+	ft::pre_order_mapi(rosalia.root, ft::print_node);
+	std::cout << std::endl;
+	ft::in_order_mapi(rosalia.root, ft::print_node);
 	TREE_TYPE	lemon_tree;
 
 	lemon_tree.insert(ft::make_pair('0', " * [ d A - ^ 0 1 d ! ] * "));
 	lemon_tree.erase(ft::make_pair('0', MAPPED_TYPE()));
 	system((std::string("leaks -q ") += argv[0] + 2).c_str());
 	std::cout << std::endl;
-  return (0);
+	return (0);
 }
