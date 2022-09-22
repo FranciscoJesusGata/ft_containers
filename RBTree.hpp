@@ -331,10 +331,12 @@ namespace ft {
 				if (deleted_node->left->color == RED) {
 					deleted_node->left->color = BLACK;
 					deleted_node->parent->right = deleted_node->left;
+					deleted_node->left->parent = parent;
 				}
 				else if (deleted_node->right->color == RED) {
 					deleted_node->right->color = BLACK;
 					deleted_node->parent->left = deleted_node->right;
+					deleted_node->right->parent = parent;
 				}
 				return ;
 			}
@@ -350,19 +352,18 @@ namespace ft {
 					close_nephew = (direction ? sibbling->right : sibbling->left);
 					distant_nephew = (1 - direction ? sibbling->right : sibbling->left);
 				}
-				if (close_nephew != nil && close_nephew->color == RED) { // delete case 5
-					rotate(sibbling, 1 - direction);
-					sibbling->color = RED;
-					close_nephew->color = BLACK;
-					distant_nephew = sibbling;
-					sibbling = close_nephew;
-				}
 				if (distant_nephew != nil && distant_nephew->color == RED) { // delete case 6
 					rotate(parent, direction);
 					sibbling->color = parent->color;
 					parent->color = BLACK;
 					distant_nephew->color = BLACK;
 					return ;
+				}
+				if (close_nephew != nil && close_nephew->color == RED) { // delete case 5
+					rotate(sibbling, 1 - direction);
+					sibbling->color = RED;
+					close_nephew->color = BLACK;
+					continue ; // force to go to case 6 instead of 4
 				}
 				if (parent->color == RED) { // delete case 4
 					sibbling->color = RED;
