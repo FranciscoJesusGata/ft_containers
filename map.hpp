@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 22:13:17 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/15 22:08:19 by fgata-va         ###   ########.fr       */
+/*   Updated: 2022/09/28 23:25:27 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,28 @@ template <class Key, class T, class Compare = std::less<Key>, class Alloc = std:
 					inserted = insert(*first);
 				}
 			}
-			/*
-			void erase (iterator position);
 
-			size_type erase (const key_type& k);
+			void erase (iterator position) {
+				_tree.erase(position.getNode());	
+				_size--;
+			}
 
-			void erase (iterator first, iterator last);
-			*/ //I don't wanna face the delete valancing now I'm just postponing the inevitable here :')
+			size_type erase (const key_type& k) {
+				if (_tree.erase(ft::make_pair(k, mapped_type()))) {
+					_size--;
+					return (1);
+				}
+				return (0);
+			}
+
+			void erase (iterator first, iterator last) {
+				iterator	tmp;
+				while (first != last) {
+					tmp = first;
+					first++;
+					erase(tmp);
+				}
+			}
 
 			void					swap (map& x)
 			{

@@ -61,6 +61,15 @@ namespace ft {
 	pair<T1, T2>	make_pair(T1 x, T2 y) {
 		return (pair<T1, T2>(x,y));
 	}
+
+	template <class T>
+	void	swap(T &a, T &b) {
+		T	aux(a);
+
+		a = b;
+		b = aux;
+	}
+
 };
 
 #endif

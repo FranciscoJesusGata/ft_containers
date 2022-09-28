@@ -48,7 +48,7 @@ namespace ft {
 
 	template <class T, bool Const>
 	NODE	*next_node(NODE *src) {
-		NODE *node = src;
+		NODE	*node = src;
 
 		if (!node->nil) {
 			if (!node->right->nil) {
@@ -78,7 +78,7 @@ namespace ft {
 					node = node->right;
 			}
 			else {
-				while (node->parent && node == node->parent->left)
+				while (!node->parent->nil && node == node->parent->left)
 					node = node->parent;
 				node = node->parent;
 			}
@@ -149,14 +149,18 @@ namespace ft {
 					nil->right = new_node;
 			}
 			insert_fixup(new_node);
+			if (nil->parent != root)
+				nil->parent = root;
 			return (ft::make_pair<node_type*,bool>(new_node,true));
 		}
 
-		void		erase(const T &item) {
-			node_type	*node;
+		bool		erase(const T &item) {
+			return(erase(search(item)));
+		}
+
+		bool		erase(node_type *node) {
 			node_type	*sustitute;
 
-			node = search(item);
 			if (node != nil) {
 				/*
 				 * If the element is found, then we will check if the element is a leaf or has a right child
@@ -171,16 +175,24 @@ namespace ft {
 				}
 				else if (node->right != nil) {
 					sustitute = next_node<T, false>(node);
-					swap_node(node, sustitute);
-					if (root == node)
-						root = sustitute;
+					swap_node(node, sustitute); //TODO: Swap brokes if you swap child and parent
 				}
-				if (node != root)
+				else if (node == nil->left)
+					nil->left = next_node<T, false>(node);
+				else if (node == nil->right)
+					nil->right = prev_node<T, false>(node);
+				if (node != root) 
 					erase_fixup(node);
-				else
+				else {
 					root = nil;
+					nil->parent = nil;
+					nil->left = nil;
+					nil->right = nil;
+				}
 				destroy_node(node);
+				return (true);
 			}
+			return (false);
 		}
 
 		node_type	*search(const T &item) const {
@@ -215,8 +227,10 @@ namespace ft {
 			node->parent = son;
 			if (grandpa != nil)
 				(node == grandpa->right ? grandpa->right : grandpa->left) = son;
-			else
+			else {
 				root = son;
+				nil->parent = son;
+			}
 			return (son);
 		}
 
@@ -330,12 +344,12 @@ namespace ft {
 			if (deleted_node->color == RED || deleted_node->left != nil || deleted_node->right != nil) {
 				if (deleted_node->left->color == RED) {
 					deleted_node->left->color = BLACK;
-					deleted_node->parent->right = deleted_node->left;
+					(direction ? parent->right : parent->left) = deleted_node->left;
 					deleted_node->left->parent = parent;
 				}
 				else if (deleted_node->right->color == RED) {
 					deleted_node->right->color = BLACK;
-					deleted_node->parent->left = deleted_node->right;
+					(direction ? parent->right : parent->left) = deleted_node->right;
 					deleted_node->right->parent = parent;
 				}
 				return ;
@@ -418,35 +432,81 @@ namespace ft {
 		}
 
 		void		swap_node(node_type *a, node_type *b) {
-			node_type *aux;
-			e_color		aux_color;
+			if (a->parent == b) {
+				swap_relatives(a, b);
+				return ;
+			}
+			else if (b->parent == a) {
+				swap_relatives(b, a);
+				return ;
+			}
 
-			if (a == root)
+			if (a == root) {
 				root = b;
+				nil->parent = b;
+			}
 			else {
 				(a == a->parent->left ? a->parent->left : a->parent->right) = b;
-				if (b == root)
+				if (b == root) {
 					root = a;
+					nil->parent = a;
+				}
 				else
 					(b == b->parent->left ? b->parent->left : b->parent->right) = a;
 			}
-			a->left->parent = b;
-			b->left->parent = a;
-			aux = a->left;
-			a->left = b->left;
-			b->left = aux;
-			a->right->parent = b;
-			b->right->parent = a;
-			aux = a->right;
-			a->right = b->right;
-			b->right = aux;
-			aux = a->parent;
-			a->parent = b->parent;
-			b->parent = aux;
-			aux_color = a->color;
-			a->color = b->color;
-			b->color = aux_color;
+
+			if (nil->left == a)
+				nil->left = b;
+			else if (nil->left == b)
+				nil->left = a;
+			if (nil->left == a)
+				nil->left = b;
+			else if (nil->left == b)
+				nil->left = a;
+			
+			if (a->left != nil)
+				a->left->parent = b;
+			if (b->left != nil)
+				b->left->parent = a;
+			if (a->right != nil)
+				a->right->parent = b;
+			if (b->right != nil)
+				b->right->parent = a;
+			ft::swap(a->left, b->left);
+			ft::swap(a->right, b->right);
+			ft::swap(a->parent, b->parent);
+			ft::swap(a->color, b->color);
 		}
+
+		void		swap_relatives(node_type *child, node_type *parent) {
+			child->parent = parent->parent;
+			if (parent == root) {
+				root = child;
+				nil->parent = child;
+			}
+			else
+				(parent == parent->parent->left ? parent->parent->left : parent->parent->right) = child;
+			parent->parent = child;
+			if (child == parent->left) {
+				parent->left = child->left;
+				child->left = parent;
+				if (parent->right != nil)
+					parent->right->parent = child;
+				ft::swap(child->right, parent->right);
+			} else {
+				parent->right = child->right;
+				child->right = parent;
+				if (parent->left != nil)
+					parent->left->parent = child;
+				ft::swap(child->left, parent->left);
+			}
+			ft::swap(parent->color, child->color);
+			if (nil->left == parent)
+				nil->left = child;
+			if (nil->right == parent)
+				nil->right = child;
+		}
+	
 	};
 
 	template <class T>
