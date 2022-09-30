@@ -423,8 +423,7 @@ namespace ft {
 			if (start == nil)
 					return (false);
 			for (node_type *p = start->parent ; p != nil ; p = p->parent) {
-				if (cmp(p->item, p->parent->item) != cmp(item, p->parent->item)
-					|| (!p->parent && p->parent != root)) {
+				if (cmp(p->item, p->parent->item) != cmp(item, p->item)) {
 					return (false);
 				}
 			}
