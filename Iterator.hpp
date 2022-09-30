@@ -279,10 +279,10 @@ namespace ft {
 
 		public:
 			typedef	typename ft::conditional<Const, const T, T >::type																	value_type;
-			typedef typename ft::iterator_traits<value_type *>::difference_type															difference_type;
+			typedef typename ft::iterator_traits<value_type *>::difference_type													difference_type;
 			typedef typename ft::iterator_traits<value_type *>::pointer																	pointer;
 			typedef typename ft::iterator_traits<value_type *>::reference																reference;
-			typedef typename ft::iterator_traits<value_type *>::iterator_category														random_access_iterator_tag;
+			typedef typename ft::iterator_traits<value_type *>::iterator_category												bidirectional_iterator_tag;
 
 			map_iterator(): _node(NULL) {}
 			map_iterator(node_type * const src): _node(src) {}
@@ -348,6 +348,87 @@ namespace ft {
 				return (temp);
 			}
 	};
+
+	template <class T, bool Const>
+	class	set_iterator: public std::iterator<std::bidirectional_iterator_tag, T> {
+		private:
+			typedef typename ft::RBTreeNode<const T>																																node_type;
+			node_type																																																*_node;
+
+		public:
+			typedef T const																																													value_type;
+			typedef typename ft::iterator_traits<value_type*>::difference_type																					difference_type;
+			typedef typename ft::iterator_traits<value_type*>::pointer																									pointer;
+			typedef typename ft::iterator_traits<value_type*>::reference																								reference;
+			typedef typename ft::iterator_traits<value_type*>::iterator_category																				bidirectional_iterator_tag;
+
+			set_iterator(): _node(NULL) {}
+			set_iterator(node_type * const src): _node(src) {}
+			template <bool B>
+			set_iterator(set_iterator<T, B> const &src) {
+				_node = src.getNode();
+			}
+			~set_iterator() {}
+
+			node_type		*getNode() const {
+				return (_node);
+			}
+
+			set_iterator	&operator=(set_iterator const &rhs) {
+				if (rhs._node != this->_node)
+					this->_node = rhs._node;
+				return (*this);
+			}
+
+			template <bool B>
+			bool			operator==(set_iterator<T, B> const& rhs) const {
+				return (this->_node == rhs.getNode());
+			}
+
+			template <bool B>
+			bool			operator!=(set_iterator<T, B> const& rhs) const {
+				return (!(*this == rhs));
+			}
+
+			reference		operator*() {
+				return (this->_node->item);
+			}
+
+			reference		operator*() const {
+				return (this->_node->item);
+			}
+
+			pointer		operator->() {
+				return (&this->_node->item);
+			}
+
+			pointer		operator->() const {
+				return (&this->_node->item);
+			}
+
+			set_iterator	&operator++() {
+				_node = ft::next_node<value_type, false>(_node);
+				return (*this);
+			}
+
+			set_iterator	operator++(int) {
+				set_iterator	temp(*this);
+				++(*this);
+				return (temp);
+			}
+
+			set_iterator	&operator--() {
+				_node = ft::prev_node<value_type, false>(_node);
+				return (*this);
+			}
+
+			set_iterator	operator--(int) {
+				set_iterator	temp(*this);
+				--(*this);
+				return (temp);
+			}
+	};
+
 }
 
 #endif
