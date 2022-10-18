@@ -73,7 +73,7 @@ namespace ft {
 				this->_capacity = n;
 				pos = this->_storadge;
 				while (first != last) {
-					*pos = *first;
+					_allocator.construct(pos, *first);
 					first++; pos++;
 				}
 			}
@@ -387,11 +387,11 @@ namespace ft {
 					_reallocate(new_vector, 1);
 					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite != last; ite++) {
 						if (it == position) {
-							*ite = val;
+							_allocator.construct(ite.getPointer(), val);
 							position = ite;
 						}
 						else
-							*ite = *it++;
+							_allocator.construct(ite.getPointer(), *it++);
 					}
 					swap(new_vector);
 				} else {
@@ -410,10 +410,10 @@ namespace ft {
 					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it <= last; ite++) {
 						if (it == position)
 							for (size_t i = 0; i < n; i++, ite++)
-								*ite = val;
+								_allocator.construct(ite.getPointer(), val);
 						if (it == last)
 							break ;
-						*ite = *it++;
+						_allocator.construct(ite.getPointer(), *it++);
 					}
 					swap(new_vector);
 				} else {
@@ -435,10 +435,10 @@ namespace ft {
 					_reallocate(new_vector, n);
 					for (iterator it = begin(), ite = new_vector.begin(), finish = end(); it <= finish; ite++) {
 						for (;it == position && first != last; first++, ite++)
-							*ite = *first;
+							_allocator.construct(ite.getPointer(), *first);
 						if (it == finish)
 							break ;
-						*ite = *it++;
+						_allocator.construct(ite.getPointer(), *it++);
 					}
 					swap(new_vector);
 				} else {
