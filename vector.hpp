@@ -381,7 +381,7 @@ namespace ft {
 
 			iterator insert(iterator position, const value_type& val)
 			{
-				if (_size == _capacity || position == end()) {
+				if (_size == _capacity) {
 					vector<T>	new_vector;
 
 					_reallocate(new_vector, 1);
