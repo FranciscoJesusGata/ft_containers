@@ -20,10 +20,31 @@ class value_compare {
   	}
 };
 
+
 #define KEY_TYPE char
 #define MAPPED_TYPE std::string
 #define PAIR_TYPE ft::pair<const KEY_TYPE, MAPPED_TYPE>
 #define TREE_TYPE ft::RBTree<PAIR_TYPE, value_compare<PAIR_TYPE, std::less<KEY_TYPE> >,std::less<KEY_TYPE>, std::allocator<PAIR_TYPE> >
+
+void test_erase(TREE_TYPE::node_type *node, TREE_TYPE &tree) {
+	std::cout << "Erasing " << node->item.first << std::endl << std::endl;
+	tree.erase(node);
+	ft::in_order_mapi(tree.root, ft::print_node);
+	std::cout << "===========================" << std::endl << std::endl;
+}
+
+void test_erase(TREE_TYPE::node_type *start, TREE_TYPE::node_type *finish, TREE_TYPE &tree) {
+	std::cout << "Erasing from " << start->item.first << " until " << finish->item.first << std::endl << std::endl;
+	TREE_TYPE::node_type	*tmp;
+	while (start != finish) {
+		tmp = start;
+		start = ft::next_node<PAIR_TYPE, false>(start);
+		tree.erase(tmp);
+	}
+	ft::in_order_mapi(tree.root, ft::print_node);
+	std::cout << "===========================" << std::endl << std::endl;
+}
+
 int  main(int argc, char *argv[]) {
 	TREE_TYPE rosalia;
 
@@ -56,7 +77,7 @@ int  main(int argc, char *argv[]) {
 	std::cout << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	//Delete u simple delete
-	rosalia.erase(ft::make_pair('u', MAPPED_TYPE()));
+	/*rosalia.erase(ft::make_pair('u', MAPPED_TYPE()));
 	std::cout << "Deleting u:" << std::endl;
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
@@ -91,10 +112,24 @@ int  main(int argc, char *argv[]) {
 	ft::pre_order_mapi(rosalia.root, ft::print_node);
 	std::cout << std::endl;
 	ft::in_order_mapi(rosalia.root, ft::print_node);
+	rosalia.erase(ft::make_pair('b', MAPPED_TYPE()));
+	std::cout << "Deleting b:" << std::endl;
+	ft::pre_order_mapi(rosalia.root, ft::print_node);
+	std::cout << std::endl;
+	ft::in_order_mapi(rosalia.root, ft::print_node);
 	TREE_TYPE	lemon_tree;
 
 	lemon_tree.insert(ft::make_pair('0', " * [ d A - ^ 0 1 d ! ] * "));
 	lemon_tree.erase(ft::make_pair('0', MAPPED_TYPE()));
+	std::cout << std::endl << "== ERASE ELEMENT ONE BY ONE ==" << std::endl << std::endl;
+	for (unsigned int i = 0; i < 10; ++i)
+  	lemon_tree.insert(ft::make_pair(i + 48, std::string((10 - i), i + 65)));
+	ft::in_order_mapi(lemon_tree.root, ft::print_node);
+	test_erase(ft::next_node<PAIR_TYPE, false>(lemon_tree.min()), lemon_tree);
+	test_erase(lemon_tree.min(), lemon_tree);
+	test_erase(lemon_tree.max(), lemon_tree);
+	test_erase(lemon_tree.min(), lemon_tree.search(ft::make_pair('5', MAPPED_TYPE())), lemon_tree);
+	test_erase(ft::next_node<PAIR_TYPE, false>(lemon_tree.min()), lemon_tree.max(), lemon_tree);*/
 	system((std::string("leaks -q ") += argv[0] + 2).c_str());
 	std::cout << std::endl;
 	return (0);

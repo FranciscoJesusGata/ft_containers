@@ -298,37 +298,30 @@ namespace ft {
 
 		void	insert_fixup(node_type *new_node)
 		{
-			node_type *parent = new_node->parent;
 			node_type *uncle;
 			node_type *grandpa;
+			e_dir			dir; 
 
-			while (parent != nil && parent->color == RED)
+			while (new_node != root && new_node->parent->color == RED)
 			{
-				uncle = (parent == parent->parent->left ? parent->parent->right : parent->parent->left);
-				if (uncle != nil && uncle->color == RED) {
-					parent->color = BLACK;
-					parent->parent->color = RED;
+				grandpa = new_node->parent->parent;
+				uncle = (grandpa->left == new_node->parent ? grandpa->right : grandpa->left);
+				dir = (new_node == new_node->parent->left ? LEFT : RIGHT);
+				if (uncle->color == RED) {
+					new_node->parent->color = BLACK;
+					grandpa->color = RED;
 					uncle->color = BLACK;
-					new_node = parent->parent;
-				}
-				else if ((new_node == parent->left && parent == parent->parent->right)
-					|| (new_node == parent->right && parent == parent->parent->left)) {
-						if (new_node == parent->left)
-							rotate(parent, RIGHT);
-						else
-							rotate(parent, LEFT);
-						new_node = parent;
+					new_node = grandpa;
 				}
 				else {
-					grandpa = parent->parent;
-					if (new_node == parent->left)
-						rotate(grandpa, RIGHT);
-					else
-						rotate(grandpa, LEFT);
-					parent->color = BLACK;
+					if (new_node == grandpa->right->left || new_node == grandpa->left->right) {
+						new_node = new_node->parent;
+						dir == LEFT ? rotate(new_node, RIGHT) : rotate(new_node, LEFT); // Rotate in the oposite direction
+					}
+					new_node->parent->color = BLACK;
 					grandpa->color = RED;
+					grandpa->left == new_node->parent ? rotate(grandpa, RIGHT) : rotate(grandpa, LEFT);
 				}
-				parent = new_node->parent;
 			}
 			root->color = BLACK;
 		}
