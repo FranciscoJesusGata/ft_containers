@@ -211,27 +211,10 @@ namespace ft {
 		}
 
 		node_type	*rotate(node_type *node, int dir) {
-			node_type	*son = (dir ? node->left : node->right);
-			node_type	*grandson;
-			node_type	*grandpa;
-
-			if (son == nil)
-				return (NULL);
-			grandson = (dir ? son->right : son->left);
-			if (grandson != nil)
-				grandson->parent = node;
-			(dir ? node->left : node->right) = grandson;
-			(dir ? son->right : son->left) = node;
-			grandpa = node->parent;
-			son->parent = grandpa;
-			node->parent = son;
-			if (grandpa != nil)
-				(node == grandpa->right ? grandpa->right : grandpa->left) = son;
-			else {
-				root = son;
-				nil->parent = son;
-			}
-			return (son);
+			if (dir == LEFT)
+				return (rotateLeft(node));
+			else
+				return (rotateRight(node));
 		}
 
 		void	swap(RBTree	&lhs) {
@@ -295,6 +278,50 @@ namespace ft {
 		private:
 
 		node_type					*nil;
+
+		node_type *rotateLeft(node_type *node) {
+			node_type	*son = node->right;
+			node_type	*grandson = son->left;
+			node_type	*grandpa = node->parent;
+
+			if (son == nil)
+				return (NULL);
+			if (grandson != nil)
+				grandson->parent = node;
+			node->right = grandson;
+			son->left = node;
+			son->parent = grandpa;
+			node->parent = son;
+			if (grandpa != nil)
+				(node == grandpa->right ? grandpa->right : grandpa->left) = son;
+			else {
+				root = son;
+				nil->parent = son;
+			}
+			return (son);
+		}
+
+		node_type	*rotateRight(node_type *node) {
+			node_type	*son = node->left;
+			node_type	*grandson = son->right;
+			node_type	*grandpa = node->parent;
+
+			if (son == nil)
+				return (NULL);
+			if (grandson != nil)
+				grandson->parent = node;
+			node->left = grandson;
+			son->right = node;
+			son->parent = grandpa;
+			node->parent = son;
+			if (grandpa != nil)
+				(node == grandpa->right ? grandpa->right : grandpa->left) = son;
+			else {
+				root = son;
+				nil->parent = son;
+			}
+			return (son);
+		}
 
 		void	insert_fixup(node_type *new_node)
 		{
