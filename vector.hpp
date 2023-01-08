@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:38:33 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/07/18 17:57:55 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/08 19:29:07 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
 	class vector {
 		public:
-			typedef T																								value_type;
-			typedef Alloc																						allocator_type;
-			typedef typename allocator_type::reference							reference;
-			typedef typename allocator_type::const_reference				const_reference;
-			typedef typename allocator_type::pointer								pointer;
-			typedef typename allocator_type::const_pointer					const_pointer;
-			typedef typename ft::vector_iterator<value_type>				iterator;
-			typedef typename ft::vector_iterator<value_type const>	const_iterator;
-			typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
-			typedef size_t																					size_type;
+			typedef T												value_type;
+			typedef Alloc											allocator_type;
+			typedef typename allocator_type::reference				reference;
+			typedef typename allocator_type::const_reference		const_reference;
+			typedef typename allocator_type::pointer				pointer;
+			typedef typename allocator_type::const_pointer			const_pointer;
+			typedef typename ft::vector_iterator<value_type, false>	iterator;
+			typedef typename ft::vector_iterator<value_type, true>	const_iterator;
+			typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
+			typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef size_t											size_type;
 
 			/**************
 			* Contructors *

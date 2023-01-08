@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2022/09/14 14:26:36 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/08 21:24:49 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,19 +116,18 @@ namespace ft {
 		return (lhs.base() - rhs.base());
 	}
 
-	template <class T>
+	template <class T, bool Const>
 	class vector_iterator: public std::iterator<std::random_access_iterator_tag, T> {
 		public:
-			typedef typename ft::iterator_traits<T*>::difference_type		difference_type;
-			typedef typename ft::iterator_traits<T*>::value_type				value_type;
-			typedef typename ft::iterator_traits<T*>::pointer						pointer;
-			typedef typename ft::iterator_traits<T*>::reference					reference;
-			typedef typename ft::iterator_traits<T*>::iterator_category	random_access_iterator_tag;
+			typedef typename ft::conditional<Const, const T, T>::type				value_type;
+			typedef typename ft::iterator_traits<value_type *>::difference_type		difference_type;
+			typedef typename ft::iterator_traits<value_type *>::pointer				pointer;
+			typedef typename ft::iterator_traits<value_type *>::reference			reference;
+			typedef typename ft::iterator_traits<value_type *>::iterator_category	random_access_iterator_tag;
 
 			vector_iterator(): _pointer(NULL) {}
 			vector_iterator(T *src): _pointer(src) {}
-			vector_iterator(vector_iterator const &src) { _pointer = src.getPointer(); }
-			template <class U> vector_iterator(vector_iterator<U> const &src): _pointer(src.getPointer()) {}
+			template <bool C> vector_iterator(vector_iterator<T, C> const &src) {_pointer = src.getPointer(); }
 			~vector_iterator() {}
 
 			pointer			getPointer() const {
@@ -147,33 +146,33 @@ namespace ft {
 				return (*this);
 			}
 
-			template <class U>
-			bool			operator<(vector_iterator<U> const& rhs) const {
+			template <bool C>
+			bool			operator<(vector_iterator<T, C> const& rhs) const {
 				return (this->_pointer < rhs.getPointer());
 			}
 
-			template <class U>
-			bool			operator>(vector_iterator<U> const& rhs) const {
+			template <bool C>
+			bool			operator>(vector_iterator<T, C> const& rhs) const {
 				return (rhs < *this);
 			}
 
-			template <class U>
-			bool			operator<=(vector_iterator<U> const& rhs) const {
+			template <bool C>
+			bool			operator<=(vector_iterator<T, C> const& rhs) const {
 				return (this->_pointer <= rhs.getPointer());
 			}
 
-			template <class U>
-			bool			operator>=(vector_iterator<U> const& rhs) const {
+			template <bool C>
+			bool			operator>=(vector_iterator<T, C> const& rhs) const {
 				return (rhs <= *this);
 			}
 
-			template <class U>
-			bool			operator==(vector_iterator<U> const& rhs) const {
+			template <bool C>
+			bool			operator==(vector_iterator<T, C> const& rhs) const {
 				return (this->_pointer == rhs.getPointer());
 			}
 
-			template <class U>
-			bool			operator!=(vector_iterator<U> const& rhs) const {
+			template <bool C>
+			bool			operator!=(vector_iterator<T, C> const& rhs) const {
 				return (!(*this == rhs));
 			}
 
@@ -223,20 +222,22 @@ namespace ft {
 				return (this->_pointer - n);
 			}
 
-			difference_type	operator+(vector_iterator const &lhs) const {
-				return (this->_pointer + lhs._pointer);
+			template <bool C>
+			difference_type	operator+(vector_iterator<T, C> const &lhs) const {
+				return (this->_pointer + lhs.getPointer());
 			}
 
-			difference_type	operator-(vector_iterator const &lhs) const {
-				return (this->_pointer - lhs._pointer);
+			template <bool C>
+			difference_type	operator-(vector_iterator<T, C> const &lhs) const {
+				return (this->_pointer - lhs.getPointer());
 			}
 
 			friend vector_iterator	operator+(int n, vector_iterator const& rhs) {
-				return (rhs._pointer + n);
+				return (rhs.getPointer() + n);
 			}
 
 			friend vector_iterator	operator-(int n, vector_iterator const& rhs) {
-				return (rhs._pointer - n);
+				return (rhs.getPointer() - n);
 			}
 
 			vector_iterator	&operator+=(vector_iterator const &lhs) {
