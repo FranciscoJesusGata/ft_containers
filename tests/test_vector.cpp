@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:44:15 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/08 22:14:36 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/11 21:43:25 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -490,8 +490,98 @@ void	test_vector(void) {
 		iterator_rel_op_tests(it, c_middle);
 		iterator_rel_op_tests(it, c_end);
 	}
-	std::cout << std::endl << std::endl << "Vector reverse iterator tests:" << std::endl;
+	std::cout << std::endl << std::endl << "Vector reverse iterator tests" << std::endl;
 	{
-		//TODO: Add the same tests for reverse iterator
+		std::cout << "\tBase offset tests:" << std::endl;
+		ft::vector<int> reversed_vct(10);
+		ft::vector<int>::iterator it(reversed_vct.begin());
+		ft::vector<int>::reverse_iterator rit(it);
+
+		for (int i = 10, j = 0; i >= 0 ; i--)
+			reversed_vct[j++] = i;
+		std::cout << std::boolalpha;
+		std::cout << (rit.base() == it) << std::endl;
+		std::cout << ((rit - 5).base() == it) << std::endl;
+		std::cout << ((rit - 1).base() == it) << std::endl;
+		std::cout << *rit.base() << std::endl;
+		std::cout << *(rit.base() + 1) << std::endl;
+		std::cout << *(rit - 1).base() << std::endl;
+		rit -= 5;
+		std::cout << *rit << std::endl;
+		std::cout << *(rit.base()) << std::endl;
+
+		std::cout << "\tConstant test:" << std::endl;
+		ft::vector<int>::reverse_iterator rite(reversed_vct.begin());
+		ft::vector<int>::const_reverse_iterator c_rite(reversed_vct.begin());
+		
+		rite = rite - 7;
+		rite = 1 + rite;
+		rite = rite + 4;
+		std::cout << "\t\t" << *(rite -= 4) << std::endl;
+		std::cout << "\t\t" << *(rite += 2) << std::endl;
+		*(rite -= 2) = 808;
+		*(rite += 2) = 1010;
+		std::cout << "\t\t" << *(c_rite -= 4) << " " << *(c_rite += 2) << std::endl;
+		std::cout << "\t\t" << (rite == c_rite) << std::endl;
+		std::cout << "\t\treverse iterator - const reverse iterator " << (rite - c_rite) << std::endl;
+		std::cout << "\t\tconst iterator - iterator " << (c_rite - rite) << std::endl;
+		std::cout << "\t\tconst iterator + 3 - iterator " << (c_rite + 1 - rite) << std::endl;
+		std::cout << "\t\titerator + 2 - const iterator " << (rite + 2 - c_rite) << std::endl;
+		
 	}
+	{
+		std::cout << "\tDereference operators:" << std::endl;
+		ft::vector<Dummy<int> > dummyVector(10);
+		ft::vector<Dummy<int> >::reverse_iterator it(dummyVector.end());
+		ft::vector<Dummy<int> >::reverse_iterator middle(it + 5);
+		ft::vector<Dummy<int> >::reverse_iterator end(dummyVector.begin());
+		ft::vector<Dummy<int> >::const_reverse_iterator c_it(it);
+		ft::vector<Dummy<int> >::const_reverse_iterator c_middle(middle);
+		ft::vector<Dummy<int> >::const_reverse_iterator c_end(end);
+
+		for	(int i = 1 ; i <= 10 ; i++) {
+			dummyVector[i] = i * 2;
+		}
+	
+		std::cout << *(it++) << std::endl;
+		std::cout << *(++it) << std::endl;
+		std::cout << *(--it) << std::endl;
+		std::cout << *(it--) << std::endl;
+
+		std::cout << *(c_it++) << std::endl;
+		std::cout << *(++c_it) << std::endl;
+		std::cout << *(--c_it) << std::endl;
+		std::cout << *(c_it--) << std::endl;
+	
+		std::cout << *it++ << std::endl;
+		std::cout << *++it << std::endl;
+		std::cout << *--it << std::endl;
+		std::cout << *it-- << std::endl;
+
+		std::cout << *c_it++ << std::endl;
+		std::cout << *++c_it << std::endl;
+		std::cout << *--c_it << std::endl;
+		std::cout << *c_it-- << std::endl;
+
+		it->dummyMethod();
+		c_it->dummyMethod();
+		(*it).dummyMethod();
+		(*c_it).dummyMethod();
+
+		std::cout << "\tRelational operators tests:" << std::endl;
+		std::cout << std::boolalpha;
+		std::cout << ((it + 5 == c_it + 5) && (c_it + 5 == middle)) << std::endl;
+		iterator_rel_op_tests(it, middle);
+		iterator_rel_op_tests(it, end);
+		iterator_rel_op_tests(c_it, c_middle);
+		iterator_rel_op_tests(it, c_end);
+		iterator_rel_op_tests(c_it, it);
+		iterator_rel_op_tests(c_middle, middle);
+		iterator_rel_op_tests(c_end, end);
+		iterator_rel_op_tests(c_it, middle);
+		iterator_rel_op_tests(c_it, end);
+		iterator_rel_op_tests(it, c_middle);
+		iterator_rel_op_tests(it, c_end);
+	}
+
 }
