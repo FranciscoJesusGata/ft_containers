@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:00:59 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/08 21:24:49 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/11 20:46:55 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ namespace ft {
 
 	template <class Iterator>
   	typename reverse_iterator<Iterator>::difference_type operator- (
-    const reverse_iterator<Iterator>& lhs,
-    const reverse_iterator<Iterator>& rhs) {
+	const reverse_iterator<Iterator>& lhs,
+	const reverse_iterator<Iterator>& rhs) {
 		return (lhs.base() - rhs.base());
 	}
 
