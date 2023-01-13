@@ -382,8 +382,9 @@ namespace ft {
 			iterator insert(iterator position, const value_type& val)
 			{
 				if (_size == _capacity) {
-					vector<T>	new_vector(_size + 1);
+					vector<T>	new_vector;
 
+					_reallocate(new_vector, 1);
 					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite != last; ite++) {
 						if (it == position) {
 							_allocator.construct(ite.getPointer(), val);
@@ -404,8 +405,9 @@ namespace ft {
 			void insert(iterator position, size_type n, const value_type& val)
 			{
 				if (_size + n >= _capacity) {
-					vector<T>	new_vector(_size + n);
+					vector<T>	new_vector;
 
+					_reallocate(new_vector, n);
 					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it <= last; ite++) {
 						if (it == position)
 							for (size_t i = 0; i < n; i++, ite++)
@@ -430,8 +432,9 @@ namespace ft {
 
 				for (InputIterator it = first; it != last ; it++, n++);
 				if (_size + n >= _capacity) {
-					vector<T>	new_vector(_size + n);
+					vector<T>	new_vector;
 
+					_reallocate(new_vector, n);
 					for (iterator it = begin(), ite = new_vector.begin(), finish = end(); it <= finish; ite++) {
 						for (;it == position && first != last; first++, ite++)
 							_allocator.construct(ite.getPointer(), *first);
@@ -510,7 +513,7 @@ namespace ft {
 
 			void _reallocate(vector<T> &src, size_type n)
 			{
-				size_type new_capacity = _capacity + (_capacity >> 1);
+				size_type new_capacity =_capacity >> 1;
 
 				if (n <= 0)
 					return ;
