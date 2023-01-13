@@ -382,9 +382,8 @@ namespace ft {
 			iterator insert(iterator position, const value_type& val)
 			{
 				if (_size == _capacity) {
-					vector<T>	new_vector;
+					vector<T>	new_vector(_size + 1);
 
-					_reallocate(new_vector, 1);
 					for (iterator it = begin(), ite = new_vector.begin(), last = new_vector.end(); ite != last; ite++) {
 						if (it == position) {
 							_allocator.construct(ite.getPointer(), val);
@@ -396,7 +395,7 @@ namespace ft {
 					swap(new_vector);
 				} else {
 					_shift_right(position, 1);
-					*position = val;
+					_allocator.construct(position.getPointer(), val);
 					_size++;
 				}
 				return (position);
@@ -405,8 +404,8 @@ namespace ft {
 			void insert(iterator position, size_type n, const value_type& val)
 			{
 				if (_size + n >= _capacity) {
-					vector<T>	new_vector;
-					_reallocate(new_vector, n);
+					vector<T>	new_vector(_size + n);
+
 					for (iterator it = begin(), ite = new_vector.begin(), last = end(); it <= last; ite++) {
 						if (it == position)
 							for (size_t i = 0; i < n; i++, ite++)
@@ -431,8 +430,8 @@ namespace ft {
 
 				for (InputIterator it = first; it != last ; it++, n++);
 				if (_size + n >= _capacity) {
-					vector<T>	new_vector;
-					_reallocate(new_vector, n);
+					vector<T>	new_vector(_size + n);
+
 					for (iterator it = begin(), ite = new_vector.begin(), finish = end(); it <= finish; ite++) {
 						for (;it == position && first != last; first++, ite++)
 							_allocator.construct(ite.getPointer(), *first);
@@ -515,9 +514,7 @@ namespace ft {
 
 				if (n <= 0)
 					return ;
-				if (_capacity + n == 1)
-					src.reserve(_capacity + 1);
-				else if (_size + n > new_capacity)
+				if (_size + n > new_capacity)
 					src.reserve(_size + n);
 				else
 					src.reserve(new_capacity);
@@ -527,7 +524,7 @@ namespace ft {
 			void _shift_right(iterator position, size_type n)
 			{
 				for (iterator it = end() + n, ite = end(), last = position - 1 ; ite != last ; it--, ite--)
-					*it = *ite;
+					_allocator.construct(it.getPointer(), *ite);
 			}
 	};
 
