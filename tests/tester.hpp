@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:41:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/11 20:42:07 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/16 19:15:29 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ std::ostream	&operator<<(std::ostream &o, const Dummy<T> &rhs) {
 }
 
 void	test_vector(void);
+void	test_stack(void);
 void	test_map(void);
 void	subject_test(void);
 

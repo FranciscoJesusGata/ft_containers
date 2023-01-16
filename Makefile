@@ -6,11 +6,11 @@
 #    By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/26 12:07:26 by fgata-va          #+#    #+#              #
-#    Updated: 2023/01/03 18:32:48 by fgata-va         ###   ########.fr        #
+#    Updated: 2023/01/12 20:33:49 by fgata-va         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TESTS := main.cpp test_vector.cpp test_map.cpp subject_test.cpp
+TESTS := main.cpp test_vector.cpp test_stack.cpp test_map.cpp subject_test.cpp
 
 SRC := $(addprefix tests/, $(TESTS))
 
