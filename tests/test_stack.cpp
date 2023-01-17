@@ -6,11 +6,12 @@
 /*   By: fgata-va <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:10:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/16 21:55:12 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/17 20:31:13 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <tester.hpp>
+#include <list>
 
 template <typename STK>
 void	print_stack(STK &stk)
@@ -86,7 +87,49 @@ void	test_stack(void) {
 			damn_boi.push(i * 5);
 		ft::stack<int> epic_gamer(damn_boi);
 		std::cout << std::boolalpha;
+		rel_oper_tests(damn_boi, damn_boi);
 		rel_oper_tests(damn_boi, epic_gamer);
+		damn_boi.push(42);
+		rel_oper_tests(damn_boi, epic_gamer);
+		rel_oper_tests(epic_gamer, damn_boi);
+		epic_gamer.push(100);
+		rel_oper_tests(damn_boi, epic_gamer);
+		rel_oper_tests(epic_gamer, damn_boi);
+		damn_boi.push(150);
+		damn_boi.push(200);
+		rel_oper_tests(damn_boi, epic_gamer);
+		rel_oper_tests(epic_gamer, damn_boi);
+		epic_gamer.push(300);
+		rel_oper_tests(damn_boi, epic_gamer);
+		rel_oper_tests(epic_gamer, damn_boi);
 		std::cout << std::noboolalpha;
+	}
+	std::cout << "Using another underline container:" << std::endl;
+	{
+		ft::stack< std::string, std::list<std::string> > elight;
+
+		elight.push("this is");
+		elight.push("a certified");
+		elight.push("hood");
+		elight.push("classic");
+		elight.push("dame da ne");
+		elight.push("dame yo dame na no yo");
+		elight.push("anta ga suki de sukisugite");
+		elight.push("dore dake tsuyoi osake demo");
+		elight.push("yugamanai omoide ga baka mitai");
+
+		ft::stack<std::string, std::list<std::string> > yeezahzah(elight);
+
+		std::cout << "\t" << elight.size() << " | " << yeezahzah.size() << std::endl;
+		print_stack(elight);
+
+		yeezahzah.push("baka mitai hontou baka ne");
+		yeezahzah.push("anta shinjiru bakari de");
+		yeezahzah.push("tsuyoi onna no furi setsunasa no yokaze abiru");
+		yeezahzah.push("hitori ni natte sannen ga sugi");
+		yeezahzah.push("machinami sae mo kawarimashita");
+		yeezahzah.push("na no ni na no ni doushite miren dake okizari");
+
+		print_stack(yeezahzah);
 	}
 }
