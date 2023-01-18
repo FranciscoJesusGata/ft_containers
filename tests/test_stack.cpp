@@ -6,7 +6,7 @@
 /*   By: fgata-va <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:10:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/17 20:31:13 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/18 19:39:51 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,5 +131,30 @@ void	test_stack(void) {
 		yeezahzah.push("na no ni na no ni doushite miren dake okizari");
 
 		print_stack(yeezahzah);
+	}
+	std::cout << "Relational operators using another underline container:" << std::endl;
+	{
+		ft::stack<int> elpablo;
+
+		for (int i = 1 ; i <= 5 ; i++)
+			elpablo.push(i * 5);
+		ft::stack<int> elcurro(elpablo);
+		std::cout << std::boolalpha;
+		rel_oper_tests(elpablo, elpablo);
+		rel_oper_tests(elpablo, elcurro);
+		elpablo.push(42);
+		rel_oper_tests(elpablo, elcurro);
+		rel_oper_tests(elcurro, elpablo);
+		elcurro.push(100);
+		rel_oper_tests(elpablo, elcurro);
+		rel_oper_tests(elcurro, elpablo);
+		elpablo.push(150);
+		elpablo.push(200);
+		rel_oper_tests(elpablo, elcurro);
+		rel_oper_tests(elcurro, elpablo);
+		elcurro.push(300);
+		rel_oper_tests(elpablo, elcurro);
+		rel_oper_tests(elcurro, elpablo);
+		std::cout << std::noboolalpha;
 	}
 }
