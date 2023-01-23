@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:07:04 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/18 20:17:12 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/23 19:16:57 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ int	main(int argc, char **argv) {
 
  * */
 //	subject_test();
+#ifdef BONUS
+	test_set();
+#endif
 	system((std::string("leaks -q ") += argv[0] + 2).c_str());
 	std::cout << std::endl;
 }
