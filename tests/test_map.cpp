@@ -1,21 +1,67 @@
 #include <tester.hpp>
 
+template <typename PairType>
+void	print_pair(const PairType &src)
+{
+	std::cout << "First: " << src.first << ", Second: " << src.second << "." << std::endl;
+}
+
 template <typename MapType>
 void	print_map(const MapType &src)
 {
 	for (typename MapType::const_iterator it = src.begin(), last = src.end() ; it != last ; it++)
-			std::cout << "['" << (*it).first << "']" << "=> \"" << (*it).second << '"' << std::endl;
+			std::cout << "['" << it->first << "']" << "=> \"" << it->second << '"' << std::endl;
 }
 
 template <typename MapType>
 void	special_print_map(const MapType &src, const std::string separator)
 {
 	for (typename MapType::const_iterator it = src.begin(), last = src.end() ; it != last ; it++)
-		std::cout << (*it).first << separator << (*it).second << std::endl;
+		std::cout << it->first << separator << it->second << std::endl;
+}
+
+template <typename MapType, typename KeyType>
+void	test_bounds(MapType &m, const KeyType &k) {
+	typename MapType::iterator lower = m.lower_bound(k);
+	typename MapType::iterator upper = m.upper_bound(k);
+	ft::pair<typename MapType::iterator,
+		typename MapType::iterator> equal = m.equal_range(k);
+
+	std::cout << "Lower bound: " << lower->first << std::endl;
+	std::cout << "Upper bound: " << upper->first << std::endl;
+	std::cout << "Equal range: " <<  (lower == equal.first ? "OK" : equal.first->second);
+	std::cout << " && " << (upper == equal.second ? "OK" : equal.second->second) << std::endl;
+	std::cout << std::endl;
+}
+
+template <typename MapType, typename KeyType>
+void	test_bounds_const(const MapType &m, const KeyType &k) {
+	typename MapType::const_iterator lower = m.lower_bound(k);
+	typename MapType::const_iterator upper = m.upper_bound(k);
+	ft::pair<typename MapType::const_iterator,
+		typename MapType::const_iterator> equal = m.equal_range(k);
+
+	std::cout << "Lower bound: " << lower->first << std::endl;
+	std::cout << "Upper bound: " << upper->first << std::endl;
+	std::cout << "Equal range: " <<  (lower == equal.first ? "OK" : equal.first->second);
+	std::cout << " && " << (upper == equal.second ? "OK" : equal.second->second) << std::endl;
+	std::cout << std::endl;
 }
 
 void	test_map(void) {
-	std::cout << "Basic test:" << std::endl;
+	std::cout << "Bounds tests:" << std::endl;
+	{
+		ft::map<char, std::string> abecedario;
+		for (char c = 'a';c <= 'h';c++)
+			abecedario[c] = std::string(((int)c % 3) + 1, c);
+		print_map(abecedario);
+		test_bounds_const(abecedario, '`');
+		test_bounds(abecedario, 'a');
+		test_bounds_const(abecedario, 'd');
+		test_bounds(abecedario, 'f');
+		test_bounds_const(abecedario, 'h');
+		test_bounds(abecedario, 'k');
+	}
 	{
 		ft::map<char, std::string> rosalia;
 		ft::map<char, std::string>::iterator hint = rosalia.insert(ft::make_pair<char, std::string>('m', "motomami")).first;
@@ -32,16 +78,6 @@ void	test_map(void) {
 		rosalia.insert(hint, ft::make_pair('n', "ni se te ocurra ni pensarlo"));
 		rosalia.insert(ft::make_pair('b', "bandida"));
 		rosalia.insert(ft::make_pair('c', "coqueta"));
-		for (ft::map<char, std::string>::iterator it = rosalia.begin(), last = rosalia.end(); it != last ; it++)
-			std::cout << (*it).first << " de " << (*it).second << std::endl;
-		ft::map<char, std::string> abecedario;
-		/*for (char c = 'a';c <= 'z';c++)
-			abecedario[c] = std::string(((int)c % 3) + 1, c);
-		for (ft::map<char, std::string>::iterator it = abecedario.begin(), last = abecedario.end(); it != last ; it++)
-			std::cout << "['" << (*it).first << "']" << "=> \"" << (*it).second << '"' << std::endl;
-		std::cout << std::endl;
-		for (ft::map<char, std::string>::reverse_iterator rit = abecedario.rbegin(), last = abecedario.rend(); rit != last ; rit++)
-			std::cout << "['" << (*rit).first << "']" << "=> \"" << (*rit).second << '"' << std::endl;*/
 		rosalia.insert(ft::make_pair('z', "zarzamora o de zapatea'o, o de zorra también"));
 		rosalia.insert(ft::make_pair('b', "bandida"));
 		rosalia.insert(ft::make_pair('c', "coqueta"));

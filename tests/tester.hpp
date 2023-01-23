@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:41:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/23 19:29:08 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/01/23 20:54:12 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@
 	#include <vector>
 	#include <stack>
 	#include <map>
+	#include <utility>
 	namespace ft = std;
 # else
 	#include <vector.hpp>
 	#include <stack.hpp>
 	#include <map.hpp>
+	#include <utility.hpp>
 # endif
 # include <iostream>
 # include <string>
