@@ -6,7 +6,7 @@
 #    By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/26 12:07:26 by fgata-va          #+#    #+#              #
-#    Updated: 2023/01/12 20:33:49 by fgata-va         ###   ########.fr        #
+#    Updated: 2023/02/21 19:14:48 by fgata-va         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,10 +20,11 @@ CXXFLAGS := -Wall -Werror -Wextra -std=c++98 -I. -Itests/
 
 NAME := test
 
-all: std_$(NAME) ft_$(NAME) rbtree
+all: std_$(NAME) ft_$(NAME)
 
 debug:
-	$(CXX) $(CXXFLAGS) -g $(SRC) -o ft_$(NAME)
+	$(CXX) $(CXXFLAGS) -g3  $(SRC) -o ft_$(NAME)
+	$(CXX) $(CXXFLAGS) -g3  $(SRC) -o std_$(NAME)
 
 ft_$(NAME):
 	$(CXX) $(CXXFLAGS) -O3 $(SRC) -o ft_$(NAME)
