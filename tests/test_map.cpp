@@ -440,16 +440,194 @@ void	test_map(void) {
 		std::cout << std::endl;
 		where.insert(when.begin(), when.end());
 		print_map(where);
+		std::cout << std::endl;
 	}
 	std::cout << "Erase tests: " << std::endl;
 	{
 		ft::map<int, std::string> tuna;
-		for (int i = 0; i <= 10 ; i++)
-			original[i] = std::string(i + 1, (i % 26) + 'A');
+		for (int i = 0; i <= 20 ; i++)
+			tuna[i] = std::string(i + 1, (i % 26) + 'A');
+		print_map(tuna);
+		std::cout << std::endl;
 		tuna.erase(++tuna.begin());
+		print_map(tuna);
+		std::cout << std::endl;
 		tuna.erase(tuna.begin());
-		tuna.erase(--tuna.begin());
-		tuna.erase(++tuna.begin());
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna.erase(--tuna.end());
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna.erase(tuna.begin(), ++(++(++tuna.begin())));
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna.erase(--(--(--tuna.end())), --tuna.end());
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna[19] = "mmmm tuna";
+		tuna[20] = "I'm hungry";
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna.erase(--(--(--tuna.end())), tuna.end());
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna.erase(tuna.begin(), --tuna.end());
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna[16] = "hello";
+		tuna[17] = "hola";
+		tuna[18] = "salut";
+		tuna[19] = "hallo";
+		print_map(tuna);
+		std::cout << std::endl;
+		tuna.erase(tuna.begin(), tuna.end());
+		print_map(tuna);
+		std::cout << std::endl;
+
+		ft::map<int, std::string> salmon;
+		for (int i = 0 ; i <= 5 ; i++)
+			salmon[i] = std::string(i + 1, (i % 26) + 'A');
+		print_map(salmon);
+		for (int i = 1 ; i <= 4 ; i++)
+			salmon.erase(i);
+		print_map(salmon);
+		std::cout << std::endl;
+		salmon.erase(salmon.begin()->first);
+		print_map(salmon);
+		std::cout << std::endl;
+		salmon.erase((--salmon.end())->first);
+		print_map(salmon);
+		std::cout << std::endl;
+		salmon[24] = "Hours I spent programming today";
+		salmon[-5] = "Hours that I spent sleeping";
+		salmon[24] = "Years old when I wrote this code";
+		print_map(salmon);
+		std::cout << std::endl;
+		salmon.erase(4);
+		print_map(salmon);
+		std::cout << std::endl;
+		salmon.erase(3);
+		print_map(salmon);
+		std::cout << std::endl;
+
+		ft::map<int, std::string> save_me;
+
+		save_me[50] = "Top of them all";
+
+		save_me[80] = "Right";
+		save_me[30] = "Left";
+
+		save_me[25] = "🌯";
+		save_me[35] = "🥪";
+		save_me[75] = "🥙";
+		save_me[95] = "🌮";
+
+		save_me[11] = "🎧";
+		save_me[28] = "🎸";
+		save_me[33] = "🎹";
+		save_me[37] = "🥁";
+
+		save_me[70] = "🎺";
+		save_me[78] = "🎷";
+		save_me[93] = "🎻";
+		save_me[100] = "🎼";
+
+		save_me[5] = "👀";
+		save_me[20] = "👓";
+		save_me[26] = "🤓";
+		save_me[29] = "😎";
+		save_me[32] = "😁";
+		save_me[34] = "🦷";
+		save_me[36] = "😬";
+		save_me[38] = "🥶";
+		save_me[60] = "😇";
+		save_me[72] = "😈";
+		save_me[76] = "👿";
+		save_me[79] = "👹";
+		save_me[85] = "💤";
+		save_me[92] = "😴";
+		save_me[98] = "🥱";
+		save_me[150] = "🛌";
+		
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(30);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(95);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(29);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(92);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(26);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(85);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(25);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(90);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(20);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(11);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(28);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(50);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(38);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(37);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(36);
+		print_map(save_me);
+		std::cout << std::endl;
+		save_me.erase(35);
+		print_map(save_me);
+		std::cout << std::endl;
+		
+	}
+	std::cout << "Swap tests: " << std::endl;
+	{
+		ft::map<int, std::string> guts;
+		ft::map<int, std::string> griffith;
+
+		for (int i = 0; i <= 5 ; i++)
+			guts[i] = std::string((i % 3) + 1, i + 'A');
+		for (int i = 6; i <= 10 ; i++)
+			griffith[i] = std::string((i % 3) + 1, i + 'A');
+
+		ft::map<int, std::string>::const_iterator puck(guts.begin());
+		ft::map<int, std::string>::const_iterator behelit(griffith.begin());
+		std::cout << "\tBefore swap: " << std::endl;
+		print_map(guts);
+		std::cout << std::endl;
+		print_map(griffith);
+		std::cout << std::endl;
+		guts.swap(griffith);
+		std::cout << "\tAfter swap: " << std::endl;
+		print_map(guts);
+		std::cout << std::endl;
+		print_map(griffith);
+		std::cout << std::endl;
+		guts.swap(griffith);
+		std::cout << "\tCheck iterators reference:" << std::endl << std::boolalpha;
+		std::cout << "\t\t" << (puck == guts.begin()) << std::endl;
+		std::cout << "\t\t" << (behelit == griffith.begin()) << std::endl;
 	}
 	std::cout << "Mix tests: " << std::endl;
 	{
