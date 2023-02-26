@@ -412,13 +412,16 @@ void	test_map(void) {
 		who.insert(ft::pair<int, std::string>(30, "aaaaAAAAAAAA"));
 		print_map(who);
 		std::cout << std::endl;
-		who.insert(who.begin(), ft::pair<int, std::string>(44, "roses are red"));
+		who.insert(ft::pair<int, std::string>(44, "roses are red"));
 		print_map(who);
 		std::cout << std::endl;
-		who.insert(who.end(), ft::pair<int, std::string>(1998, "great year"));
+		who.insert(who.begin(), ft::pair<int, std::string>(1998, "great year"));
 		print_map(who);
 		std::cout << std::endl;
 		who.insert(who.end(), ft::pair<int, std::string>(1990, "great decade"));
+		print_map(who);
+		std::cout << std::endl;
+		who.insert(who.end(), ft::pair<int, std::string>(2000, "new millenium"));
 		print_map(who);
 		std::cout << std::endl;
 
@@ -441,6 +444,22 @@ void	test_map(void) {
 		where.insert(when.begin(), when.end());
 		print_map(where);
 		std::cout << std::endl;
+	}
+	{
+		typedef ft::map<std::string, int> map_type;
+		typedef map_type::value_type pair_type;
+		map_type hint_insert;
+
+		hint_insert.insert(pair_type("lol", 1));
+		hint_insert.insert(pair_type("mdr", 2));
+		hint_insert.insert(pair_type("funny", 3));
+		hint_insert.insert(pair_type("bunny", 4));
+		hint_insert.insert(pair_type("fizz", 5));
+		hint_insert.insert(pair_type("buzz", 6));
+		hint_insert.insert(hint_insert.begin(), pair_type("fuzzy", 7));
+		hint_insert.insert(hint_insert.begin(), pair_type("beauty", 8));
+		hint_insert.insert(hint_insert.end(), pair_type("Hello", 9));
+		hint_insert.insert(hint_insert.end(), pair_type("World", 10));
 	}
 	std::cout << "Erase tests: " << std::endl;
 	{
@@ -696,5 +715,20 @@ void	test_map(void) {
 		ft::map<char, std::string>::iterator uplow = rosalia.upper_bound('d');
 		if (uplow != rosalia.end())
 			std::cout << "['" << (*uplow).first << "']" << " => \"" << (*uplow).second << '"' << std::endl;
+	}
+	std::cout << "Worst case scenario:" << std::endl;
+	{
+		timeval start;
+		gettimeofday(&start, NULL);
+		ft::map<int, int> hell;
+		for (size_t i = 0 ; i < 1e6 ; i++)
+			hell.insert(ft::pair<int, int>(i, i % 666));
+		for (ft::map<int, int>::const_iterator it = hell.begin() ; it != hell.end() ; it++)
+			std::cout << it->first << " => " << it->second << std::endl;
+		std::cout << std::endl;
+		for (ft::map<int, int>::const_reverse_iterator it = hell.rbegin() ; it != hell.rend() ; it++)
+			std::cout << it->first << " => " << it->second << std::endl;
+		std::cout << std::endl;
+		print_timediff(start);
 	}
 }

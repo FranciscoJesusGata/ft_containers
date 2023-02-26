@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:41:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/23 20:54:12 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/02/26 20:05:54 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 # include <ctime>
 # include <deque>
 # include <ostream>
+# include <iomanip>
+# include <time.h>
+# include <sys/time.h>
 //Subject test stuff
 # define MAX_RAM 4294967296
 # define BUFFER_SIZE 4096
@@ -116,6 +119,7 @@ std::ostream	&operator<<(std::ostream &o, const Dummy<T> &rhs) {
 	return (o);
 }
 
+void	print_timediff(timeval start);
 void	test_vector(void);
 void	test_stack(void);
 void	test_map(void);
