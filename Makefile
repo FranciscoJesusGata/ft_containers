@@ -6,7 +6,7 @@
 #    By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/26 12:07:26 by fgata-va          #+#    #+#              #
-#    Updated: 2023/02/26 20:03:45 by fgata-va         ###   ########.fr        #
+#    Updated: 2023/02/28 18:07:59 by fgata-va         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,13 +36,13 @@ ft_$(NAME):
 	$(CXX) $(CXXFLAGS) -O3 $(SRC) -o ft_$(NAME)
 
 ft_$(NAME)_bonus:
-	$(CXX) $(CXXFLAGS) -O3 -DBONUS $(SRC) -o ft_$(NAME)
+	$(CXX) $(CXXFLAGS) -O3 -DBONUS $(SRC) $(BONUS_SRC) -o ft_$(NAME)
 
 std_$(NAME):
-	$(CXX) $(CXXFLAGS) -O3 -DSTD $(SRC) -o std_$(NAME)
+	$(CXX) $(CXXFLAGS) -O3 -DSTL $(SRC) -o std_$(NAME)
 
 std_$(NAME)_bonus:
-	$(CXX) $(CXXFLAGS) -O3 -DBONUS -DSTD $(SRC) -o std_$(NAME)
+	$(CXX) $(CXXFLAGS) -O3 -DBONUS -DSTL $(SRC) $(BONUS_SRC) -o std_$(NAME)
 
 fclean:
 	rm -rf ft_$(NAME)* std_$(NAME)*

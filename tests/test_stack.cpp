@@ -6,7 +6,7 @@
 /*   By: fgata-va <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:10:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/18 19:39:51 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/03/03 18:57:30 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	rel_oper_tests(const STK &a, const STK &b)
 }
 
 void	test_stack(void) {
+	timeval start;
+	gettimeofday(&start, NULL);
 	std::cout << "Basic behaviour tests:" << std::endl;
 	{
 		ft::stack<int> tired;
@@ -157,4 +159,5 @@ void	test_stack(void) {
 		rel_oper_tests(elcurro, elpablo);
 		std::cout << std::noboolalpha;
 	}
+	print_timediff("stack", start);
 }

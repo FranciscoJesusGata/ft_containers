@@ -122,7 +122,23 @@ void	comparison_test(const MapType &test_map, typename MapType::const_iterator &
 	std::cout << "\t\tValue Compare: " << test_map.value_comp()(*f, *s) << std::endl;
 }
 
+template <typename MapType>
+void test_cmp(MapType const &m1, MapType const &m2) {
+	std::cout << std::boolalpha;	
+	std::cout << "\tm1 == m2 " << (m1 == m2) << std::endl;
+	std::cout << "\tm1 != m2 " << (m1 != m2) << std::endl;
+	std::cout << "\tm1 < m2 " << (m1 < m2) << std::endl;
+	std::cout << "\tm1 <= m2 " << (m1 <= m2) << std::endl;
+	std::cout << "\tm1 > m2 " << (m1 > m2) << std::endl;
+	std::cout << "\tm1 >= m2 " << (m1 >= m2) << std::endl;
+	std::cout << std::noboolalpha;
+	std::cout << std::endl;
+}
+
 void	test_map(void) {
+	timeval start;
+
+	gettimeofday(&start, NULL);
 	std::cout << "Constructor tests:" << std::endl;
 	{
 		typedef ft::map<int, std::string> map_type;
@@ -648,6 +664,42 @@ void	test_map(void) {
 		std::cout << "\t\t" << (puck == guts.begin()) << std::endl;
 		std::cout << "\t\t" << (behelit == griffith.begin()) << std::endl;
 	}
+	std::cout << "Relational operators:" << std::endl;
+	{
+		ft::map<char, int> one;
+		ft::map<char, int> two;
+
+		one['a'] = 1;
+		one['b'] = 2;
+		one['c'] = 3;
+		one['d'] = 4;
+		
+		two['a'] = 1;
+		two['b'] = 2;
+		two['c'] = 3;
+		two['d'] = 4;
+		
+		test_cmp(one, two);
+		test_cmp(two, one);
+
+		two['e'] = 5;
+		two['f'] = 6;
+		two['g'] = 7;
+		two['h'] = 8;
+
+		test_cmp(one, two);
+		test_cmp(two, one);
+
+		(++(++(++one.begin())))->second = 42;
+
+		test_cmp(one, two);
+		test_cmp(two, one);
+
+		swap(one, two);
+
+		test_cmp(one, two);
+		test_cmp(two, one);
+	}
 	std::cout << "Mix tests: " << std::endl;
 	{
 		ft::map<char, std::string> rosalia;
@@ -716,9 +768,9 @@ void	test_map(void) {
 		if (uplow != rosalia.end())
 			std::cout << "['" << (*uplow).first << "']" << " => \"" << (*uplow).second << '"' << std::endl;
 	}
+	print_timediff("map", start);	
 	std::cout << "Worst case scenario:" << std::endl;
 	{
-		timeval start;
 		gettimeofday(&start, NULL);
 		ft::map<int, int> hell;
 		for (size_t i = 0 ; i < 1e6 ; i++)
@@ -729,6 +781,6 @@ void	test_map(void) {
 		for (ft::map<int, int>::const_reverse_iterator it = hell.rbegin() ; it != hell.rend() ; it++)
 			std::cout << it->first << " => " << it->second << std::endl;
 		std::cout << std::endl;
-		print_timediff(start);
+		print_timediff("map", start);
 	}
 }

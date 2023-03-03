@@ -6,23 +6,25 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:41:06 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/02/26 20:05:54 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/03/03 18:09:20 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TESTER_HPP
 # define TESTER_HPP
-# ifdef STD //CREATE A REAL STL EXAMPLE
+# ifdef STL //CREATE A REAL STL EXAMPLE
 	#include <vector>
 	#include <stack>
 	#include <map>
 	#include <utility>
 	namespace ft = std;
+	#define NS "STL";
 # else
 	#include <vector.hpp>
 	#include <stack.hpp>
 	#include <map.hpp>
 	#include <utility.hpp>
+	#define NS "FT";
 # endif
 # include <iostream>
 # include <string>
@@ -101,6 +103,22 @@ class Dummy {
 			return (!(*this == rhs));
 		}
 
+		bool	operator<(Dummy const &rhs) const {
+			return (item < rhs.item);
+		}
+
+		bool	operator>(Dummy const &rhs) const {
+			return (rhs.item < item);
+		}
+		
+		bool	operator<=(Dummy const &rhs) const {
+			return (!(rhs.item < item));
+		}
+		
+		bool	operator>=(Dummy const &rhs) const {
+			return (!(item < rhs.item));
+		}
+		
 		T		&operator*(void) {
 			return (item);
 		}
@@ -119,14 +137,14 @@ std::ostream	&operator<<(std::ostream &o, const Dummy<T> &rhs) {
 	return (o);
 }
 
-void	print_timediff(timeval start);
+void	print_timediff(const char *container, timeval start);
 void	test_vector(void);
 void	test_stack(void);
 void	test_map(void);
 void	subject_test(void);
 
 # ifdef BONUS
-#  ifdef STD
+#  ifdef STL
 #   include <set>
 #  else 
 #   include <set.hpp>

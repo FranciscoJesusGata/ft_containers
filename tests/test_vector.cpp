@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:44:15 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/01/11 21:43:25 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/03/03 18:55:41 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,8 @@ void	iterator_rel_op_tests(It1 const &lhs, It2 const &rhs)
 }
 
 void	test_vector(void) {
+	timeval start;
+	gettimeofday(&start, NULL);
 	std::cout << std::endl << "Capacity functions tests:" << std::endl;
 	{
 		ft::vector<int>	v;
@@ -325,6 +327,8 @@ void	test_vector(void) {
 	std::cout << "V: ";
 	print_vector(empty);
 	std::cout << "\t\tempty: " << std::boolalpha << empty.empty() << std::noboolalpha << std::endl;
+	print_timediff("vector", start);
+	gettimeofday(&start, NULL);
 	std::cout << "\tInsert:" << std::endl;
 	{
 		ft::vector<int>	equisde(20);
@@ -583,5 +587,22 @@ void	test_vector(void) {
 		iterator_rel_op_tests(it, c_middle);
 		iterator_rel_op_tests(it, c_end);
 	}
+	print_timediff("vector", start);
+	std::cout << "Worst case scenarios: " << std::endl;
+	{
+		gettimeofday(&start, NULL);
+		ft::vector<std::string> death;
 
+		for (size_t i = 0; i < 1e6 ; i++)
+			death.push_back(std::string((i % 10) + 1, ((i + 1) % 26) + 'A'));
+		death.insert(death.end(), "💀");
+		death.insert(death.end(), 5, " L M A O ");
+		death.insert(death.end(), death.begin(), ++(++(++(++death.begin()))));
+		death.erase(death.end() - 1);
+		death.erase(death.end() - 10);
+		death.erase(death.end() - 20, death.end() - 1);
+		death.assign(death.begin(), death.begin() + 10);
+		death.assign(20, "AAAAAAAAAAAAAAAH");
+	}
+	print_timediff("vector", start);
 }
