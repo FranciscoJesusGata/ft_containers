@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:44:15 by fgata-va          #+#    #+#             */
-/*   Updated: 2023/03/03 18:55:41 by fgata-va         ###   ########.fr       */
+/*   Updated: 2023/03/03 19:27:09 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,6 @@ void	test_vector(void) {
 	std::cout << (stuff[stuff.size() - 1] == stuff.back() ? "OK! " : "KO Back function doesn't return last element");
 	std::cout << std::endl << "\tBrackets operator: " << std::endl;
 	std::cout << "\tvector[0]: " << ft[0] << std::endl;
-	std::cout << "\tvector[-1]: " << ft[-1] << std::endl;
 
 	std::cout << std::endl << std::endl << "Modifiers functions tests:" << std::endl;
 	std::cout << "\tAssign: " << std::endl;
